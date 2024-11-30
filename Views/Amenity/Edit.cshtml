@@ -1,0 +1,19 @@
+﻿@model airbnbb.Models.Amenity
+
+<h2>Edit Amenity</h2>
+
+<form asp-action="Edit" method="post">
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="IconUrl" class="control-label"></label>
+        <input asp-for="IconUrl" class="form-control" />
+        <span asp-validation-for="IconUrl" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>

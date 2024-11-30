@@ -1,0 +1,30 @@
+﻿@model IEnumerable<airbnbb.Models.Amenity>
+
+<h1>Amenities List</h1>
+
+<p>
+    <a href="@Url.Action("Create")">Create New Amenity</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Icon</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var amenity in Model)
+        {
+            <tr>
+                <td>@amenity.Name</td>
+                <td><img src="@amenity.IconUrl" alt="Icon" width="30" height="30" /></td>
+                <td>
+                    <a href="@Url.Action("Edit", new { id = amenity.Id })">Edit</a> |
+                    <a href="@Url.Action("Delete", new { id = amenity.Id })">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

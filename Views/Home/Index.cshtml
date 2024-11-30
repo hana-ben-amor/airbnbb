@@ -1,0 +1,72 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<style>
+
+
+    .subtitles {
+        margin: 50px 0 20px;
+        font-size: 2.2vw;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .exclusives {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-gap: 30px;
+    }
+
+        .exclusives div img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .exclusives div {
+            text-align: center;
+            position: relative;
+        }
+
+            .exclusives div span {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                text-align: center;
+                color: #fff;
+            }
+
+    /**************************Trending Places **************************/
+    .trending {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-gap: 30px;
+    }
+
+        .trending div img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .trending h3 {
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+
+</style>
+
+<section class="container">
+    <div class="subtitles">Exclusives</div>
+    <div class="exclusives">
+        <div>
+            <img src="~/image-1.png" alt="Exclusive 1">
+            <span>Exclusive Offer</span>
+        </div>
+        <div>
+            <img src="~/image-2.png" alt="Exclusive 2">
+            <span>Exclusive Offer</span>
+        </div>
+        <!-- More exclusives... -->
+    </div>
+</section>

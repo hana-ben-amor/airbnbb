@@ -1,0 +1,16 @@
+﻿@model airbnbb.Models.Amenity
+
+<h2>Delete Amenity</h2>
+
+<h3>Are you sure you want to delete this amenity?</h3>
+
+<div>
+    <h4>@Model.Name</h4>
+    <p>Icon: <img src="@Model.IconUrl" alt="Icon" width="50" /></p>
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a href="@Url.Action("Index", "Amenity")" class="btn btn-secondary">Cancel</a>
+</form>
