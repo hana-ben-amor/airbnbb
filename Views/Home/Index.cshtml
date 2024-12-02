@@ -2,71 +2,270 @@
     ViewData["Title"] = "Home Page";
 }
 <style>
-
-
-    .subtitles {
-        margin: 50px 0 20px;
-        font-size: 2.2vw;
-        font-weight: 500;
-        color: #333;
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #fff;
+        padding: 20px 30px;
+        border-bottom: 1px solid #ddd;
+        flex-wrap: wrap; /* Allow wrapping of items if needed */
     }
 
-    .exclusives {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        grid-gap: 30px;
+    .wishlist-icon {
+        position:absolute;
+        font-size: 24px;
+        color: #808080;
+        cursor: pointer;
+        top: 20px; /* Distance from the top */
+        right: 20px; /* Distance from the right */
+        transition: color 0.3s ease;
     }
 
-        .exclusives div img {
-            width: 100%;
-            border-radius: 10px;
+        .wishlist-icon.liked {
+            color: #ff5a60; /* Change color when liked */
         }
 
-        .exclusives div {
-            text-align: center;
-            position: relative;
+    /* Styling for the rating stars */
+    .rating {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+        .rating i {
+            font-size: 18px;
+            color: #ff5a60; /* Color for rating stars */
+            margin: 0 2px;
         }
 
-            .exclusives div span {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                text-align: center;
-                color: #fff;
+            .rating i.empty {
+                color: #ddd; /* Color for empty stars */
             }
 
-    /**************************Trending Places **************************/
-    .trending {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        grid-gap: 30px;
+    /* Container for header items */
+    .header-items {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap; /* Allow items to wrap to the next line if necessary */
     }
 
-        .trending div img {
-            width: 100%;
-            border-radius: 10px;
+    /* Styling for each item in the header box */
+    .header-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100px; /* Set a fixed width for each box */
+        padding: 10px;
+        background-color: #f0f0f0;
+        border-radius: 10px;
+        text-align: center;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+        /* Icon styling */
+        .header-item i {
+            font-size: 24px;
+            color: #ff5a60; /* Icon color */
         }
 
-        .trending h3 {
-            font-weight: 600;
+        /* Filter name styling */
+        .header-item span {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #808080;
+        }
+
+        /* Hover effect for each header item */
+        .header-item:hover {
+            background-color: #ff5a60;
+            transform: translateY(-5px); /* Lift the item when hovered */
+        }
+
+            /* Hover effect for icon and text */
+            .header-item:hover i {
+                color: white;
+            }
+
+            .header-item:hover span {
+                color: white;
+            }
+
+    /* Styling for the 'Filters' button */
+    .filters-btn {
+        background-color: #fff;
+        border: 2px solid #ff5a60;
+        border-radius: 20px;
+        color: #ff5a60;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+
+        /* Hover effect for the Filters button */
+        .filters-btn:hover {
+            background-color: #ff5a60;
+            color: #fff;
+            border-color: #ff5a60;
+        }
+
+    .properties-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 30px;
+    }
+
+    /* Styling for each property box */
+    .property-item {
+        width: 220px;
+        padding: 15px;
+        background-color: #f0f0f0;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Hide properties that do not match the filter */
+    .hidden {
+        display: none;
+    }
+
+    /* Styling for property title */
+    .property-item h3 {
+        margin-bottom: 10px;
+    }
+
+    /* Styling for property description */
+    .property-item p {
+        color: #808080;
+    }
+
+    .property-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .property-item {
+        position: relative;
+        width: 300px;
+        border: 1px solid #ddd;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+        .property-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .property-item h3 {
+            font-size: 1.2em;
             margin-top: 10px;
         }
 
+        .property-item p {
+            font-size: 1em;
+            margin-top: 5px;
+        }
 
+        .property-item .price {
+            color: green;
+            font-weight: bold;
+            margin-top: 10px;
+        }
 </style>
 
-<section class="container">
-    <div class="subtitles">Exclusives</div>
-    <div class="exclusives">
-        <div>
-            <img src="~/image-1.png" alt="Exclusive 1">
-            <span>Exclusive Offer</span>
+<section>
+    <header class="header">
+        <div class="header-items">
+            <div class="header-item" data-filter="new"><i class="fas fa-plus"></i><span>New</span></div>
+            <div class="header-item" data-filter="Top of the world"><i class="fas fa-globe"></i><span>Top of the world</span></div>
+            <div class="header-item" data-filter="trending"><i class="fas fa-fire"></i><span>Trending</span></div>
+            <div class="header-item" data-filter="hanks"><i class="fas fa-user"></i><span>Hanks</span></div>
+            <div class="header-item" data-filter="private"><i class="fas fa-lock"></i><span>Private rooms</span></div>
+            <div class="header-item" data-filter="countryside"><i class="fas fa-tree"></i><span>Countryside</span></div>
+            <div class="header-item" data-filter="ski"><i class="fas fa-snowboarding"></i><span>Ski-in/out</span></div>
+            <div class="header-item" data-filter="cabins"><i class="fas fa-home"></i><span>Cabins</span></div>
+            <div class="header-item" data-filter="rides"><i class="fas fa-bicycle"></i><span>Rides</span></div>
         </div>
-        <div>
-            <img src="~/image-2.png" alt="Exclusive 2">
-            <span>Exclusive Offer</span>
+    </header>
+    <div class="properties-container">
+        <div class="property-container">
+            @foreach (var property in ViewBag.Properties as List<airbnbb.Models.Property>)
+            {
+                <div class="property-item" data-category="@property.Category">
+                    <img src="@property.ImageUrl" alt="Property Image">
+                    <h3>@property.Title</h3>
+                    <p><strong>Country:</strong> @property.Country</p>
+                    <p><strong>Price per night:</strong> $@property.PricePerNight</p>
+
+                    <!-- Rating stars -->
+                    <div class="rating">
+                        @for (int i = 0; i < 5; i++)
+                        {
+                            @*   if (i < property.Rating) *@
+                            if (i < 3.5)
+                                    {
+                                <i class="fas fa-star"></i> <!-- Filled star -->
+                            }
+                            else
+                            {
+                                <i class="fas fa-star empty"></i> <!-- Empty star -->
+                            }
+                        }
+                    </div>
+
+                    <!-- Wishlist heart icon -->
+                    <i class="fas fa-heart wishlist-icon" data-property-id="@property.Id"></i>
+                </div>
+            }
         </div>
-        <!-- More exclusives... -->
     </div>
+
+
+  
 </section>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get all the wishlist icons
+        const wishlistIcons = document.querySelectorAll('.wishlist-icon');
+
+        // Add click event listeners to each heart icon
+        wishlistIcons.forEach(icon => {
+            icon.addEventListener('click', function () {
+                // Toggle the 'liked' class on the clicked heart icon
+                icon.classList.toggle('liked');
+            });
+        });
+    });
+    // Wait for the DOM to be fully loaded
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get all header items with filter data
+        const filterItems = document.querySelectorAll('.header-item');
+
+        // Get all property items
+        const propertyItems = document.querySelectorAll('.property-item');
+
+        // Add click event listeners to header items
+        filterItems.forEach(item => {
+            item.addEventListener('click', function () {
+                const filterValue = item.getAttribute('data-filter');
+
+                // Loop through all property items and hide those that do not match the filter
+                propertyItems.forEach(property => {
+                    if (filterValue === "all" || property.getAttribute('data-category') === filterValue) {
+                        property.classList.remove('hidden'); // Show the property
+                    } else {
+                        property.classList.add('hidden'); // Hide the property
+                    }
+                });
+            });
+        });
+    });
+</script>

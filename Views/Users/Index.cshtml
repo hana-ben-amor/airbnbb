@@ -4,6 +4,14 @@
     ViewData["Title"] = "Users";
 }
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+
 <h1>@ViewData["Title"]</h1>
 
 <table class="table">

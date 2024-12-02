@@ -13,13 +13,15 @@
         public string ImageUrl { get; set; }
         public PropertyStatus Status { get; set; } // Enum: Available, Booked
 
+        // New Category Property
+        public string Category { get; set; }
+
         // Relationships
         public int HostId { get; set; }
         public User Host { get; set; }
         public ICollection<Amenity> Amenities { get; set; }
         public ICollection<Review> Reviews { get; set; }
         // Relationship with Wishlist (Many-to-Many)
-        public ICollection<UserProperty> Wishlists { get; set; } 
+        public ICollection<UserProperty> Wishlists { get; set; }
     }
-
 }

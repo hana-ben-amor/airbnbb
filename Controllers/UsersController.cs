@@ -90,6 +90,7 @@ namespace airbnbb.Controllers
             return View();
         }
 
+ 
 
         [HttpPost]
         public IActionResult Login(LoginRequest loginRequest)
@@ -104,7 +105,8 @@ namespace airbnbb.Controllers
 
             if (user == null)
             {
-                ModelState.AddModelError(string.Empty, "Invalid credentials.");
+                TempData["ErrorMessage"] = "Invalid login credentials.";
+
                 return View(loginRequest);
             }
 
@@ -133,6 +135,8 @@ namespace airbnbb.Controllers
 
             HttpContext.Session.SetString("Role", user.Role.ToString());
             HttpContext.Session.SetString("Token", tokenValue);
+            TempData["SuccessMessage"] = "Login successful!";
+
             return RedirectToAction("Index");
         }
     }
