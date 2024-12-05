@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace airbnbb.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class FixWishlistPropertyRelationship : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -77,7 +77,10 @@ namespace airbnbb.Migrations
                     ImageUrl = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    HostId = table.Column<int>(type: "int", nullable: false)
+                    Category = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    HostId = table.Column<int>(type: "int", nullable: false),
+                    Rating = table.Column<double>(type: "double", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -85,26 +88,6 @@ namespace airbnbb.Migrations
                     table.ForeignKey(
                         name: "FK_Properties_Users_HostId",
                         column: x => x.HostId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Wishlists",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Wishlists", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Wishlists_Users_UserId",
-                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -199,33 +182,34 @@ namespace airbnbb.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "UserProperties",
+                name: "Wishlists",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    PropertyId = table.Column<int>(type: "int", nullable: false),
-                    WishlistId = table.Column<int>(type: "int", nullable: true)
+                    PropertyId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserProperties", x => new { x.UserId, x.PropertyId });
+                    table.PrimaryKey("PK_Wishlists", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserProperties_Properties_PropertyId",
+                        name: "FK_Wishlists_Properties_Id",
+                        column: x => x.Id,
+                        principalTable: "Properties",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Wishlists_Properties_PropertyId",
                         column: x => x.PropertyId,
                         principalTable: "Properties",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserProperties_Users_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Wishlists_Users_Id",
+                        column: x => x.Id,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserProperties_Wishlists_WishlistId",
-                        column: x => x.WishlistId,
-                        principalTable: "Wishlists",
-                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -295,19 +279,9 @@ namespace airbnbb.Migrations
                 column: "ReviewerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserProperties_PropertyId",
-                table: "UserProperties",
-                column: "PropertyId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserProperties_WishlistId",
-                table: "UserProperties",
-                column: "WishlistId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Wishlists_UserId",
+                name: "IX_Wishlists_PropertyId",
                 table: "Wishlists",
-                column: "UserId");
+                column: "PropertyId");
         }
 
         /// <inheritdoc />
@@ -323,16 +297,13 @@ namespace airbnbb.Migrations
                 name: "Reviews");
 
             migrationBuilder.DropTable(
-                name: "UserProperties");
+                name: "Wishlists");
 
             migrationBuilder.DropTable(
                 name: "Bookings");
 
             migrationBuilder.DropTable(
                 name: "Amenities");
-
-            migrationBuilder.DropTable(
-                name: "Wishlists");
 
             migrationBuilder.DropTable(
                 name: "Properties");

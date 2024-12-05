@@ -1,0 +1,344 @@
+﻿@{
+    ViewData["Title"] = "Property Details";
+}
+
+<style>
+    .property-details {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .property-details img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
+
+    .property-details h1 {
+        font-size: 2em;
+        margin-top: 20px;
+    }
+
+    .property-details p {
+        font-size: 1.2em;
+        color: #555;
+    }
+
+    .property-details .price {
+        font-size: 1.5em;
+        color: green;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    .property-details .rating {
+        display: flex;
+        margin-top: 20px;
+    }
+
+    .rating i {
+        font-size: 22px;
+        color: #ff5a60;
+        margin: 0 3px;
+    }
+
+        .rating i.empty {
+            color: #ddd;
+        }
+
+    .col-4 {
+        padding-top: 50px;
+    }
+
+        .col-4 h1 {
+            font-size: 20px;
+            margin-bottom:20px;
+        }
+
+        .col-4 p {
+            font-size: 14px;
+        }
+
+    .back-btn {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #ff5a60;
+        color: white;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+
+        .back-btn:hover {
+            background-color: #ff2a35;
+        }
+
+    /* Form Styling */
+    .form-group {
+        margin-bottom: 20px;
+
+        text-align: left; /* Ensures labels and input fields are left-aligned */
+    }
+
+    
+
+    .form-control {
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        width: 100%;
+    }
+
+        .form-control:focus {
+            border-color: #ff5a60; /* Focus color matches theme */
+            box-shadow: 0 0 5px rgba(255, 90, 96, 0.6);
+        }
+
+    .btn-primary {
+        background-color: #ff5a60;
+        border: none;
+        padding: 12px 20px;
+        color: white;
+        border-radius: 5px;
+        width: 100%;
+        font-size: 16px;
+    }
+
+        .btn-primary:hover {
+            background-color: #ff2a35;
+        }
+
+    /* Reviews Section Styling */
+    .reviews {
+        text-align: left;
+        margin-top: 30px;
+    }
+
+    .review-list {
+        margin-top: 20px;
+    }
+
+    .review-item {
+
+        background-color: #f0f0f0;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+
+    .review-header {
+        font-weight: bold;
+    }
+
+    .review-rating span {
+        color: #ff5a60;
+        font-size: 18px;
+    }
+
+    .review-item p {
+        color: #555;
+        font-size: 1em;
+    }
+
+    /* Submit Review Button */
+    .btn-submit {
+        background-color: #ff5a60;
+        border: none;
+        color: white;
+        padding: 12px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        width: 100%;
+    }
+
+        .btn-submit:hover {
+            background-color: #ff2a35;
+        }
+    /* Styling for Add Review Form */
+    .form-group {
+        margin-bottom: 20px;
+        font-size: 1.1em;
+    }
+
+        .form-group label {
+            color: #333;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            width: 100%;
+            font-size: 1em;
+        }
+
+            .form-group input:focus,
+            .form-group textarea:focus {
+                border-color: #ff5a60;
+                box-shadow: 0 0 5px rgba(255, 90, 96, 0.6);
+            }
+
+        .form-group textarea {
+            height: 120px; /* Adjust height for comment input */
+        }
+
+    /* Submit Button Styling */
+    .btn-submit {
+        background-color: #ff5a60;
+        border: none;
+        color: white;
+        padding: 12px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        width: 100%;
+        text-align: center;
+    }
+    /* Star Rating Styling */
+    .star-rating {
+        font-size: 2em;
+        color: #ddd; /* Gray stars by default */
+        cursor: pointer;
+    }
+
+        .star-rating i {
+            margin-right: 5px;
+        }
+
+            .star-rating i.selected {
+                color: #ff5a60; /* Selected stars in red */
+            }
+
+
+        .btn-submit:hover {
+            background-color: #ff2a35;
+        }
+</style>
+
+<div class="container text-center">
+    <div class="row">
+        <div class="col-8">
+
+            <div class="property-details">
+                <img src="@Model.ImageUrl" alt="Property Image">
+                          </div>
+        </div>
+        <div class="col-4">
+            <h1>@Model.Title</h1>
+          
+            <p>@Model.Description</p>
+            <div class="row">
+                <div class="col"> <p> <i class="bi bi-geo"></i> @Model.City, @Model.Country</p></div>
+                <div class="col">
+                    <p>@Model.PricePerNight.ToString("C")/<i class="bi bi-moon-stars"></i></p>
+                </div>
+            </div>
+          
+            <form method="post" action="/Property/BookProperty">
+                <div class="form-group">
+                    <label for="checkinDate">Check-In Date:</label>
+                    <input type="date" id="checkinDate" name="checkinDate" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="checkoutDate">Check-Out Date:</label>
+                    <input type="date" id="checkoutDate" name="checkoutDate" class="form-control" required>
+                </div>
+
+           
+
+                <button type="submit" class="btn btn-primary btn-block">Book</button>
+            </form>
+    </div>
+    </div>
+
+
+
+<!-- Reviews Section -->
+    <section class="reviews">
+        <h2>Reviews</h2>
+        @if (Model.Reviews != null )
+        {
+            foreach (var review in Model.Reviews)
+            {
+                <div class="review">
+                    <p><strong>@review.Reviewer.FullName</strong> | Rating: @review.Rating</p>
+                    <p>@review.Comment</p>
+                    <p><em>@review.Date.ToString("g")</em></p>
+                </div>
+            }
+        }
+       
+        else
+        {
+            <p>No reviews yet. Be the first to leave one!</p>
+        }
+
+
+        <!-- Add Review Form -->
+        <h3>Add Your Review</h3>
+      
+           <form method="post" action="/Review/SubmitReview">
+            <div class="form-group">
+                <input type="hidden" name="propertyId" value="@Model.Id" />
+                <label for="rating">Rating (1-5):</label>
+                <!-- Star Rating -->
+                <div class="star-rating" id="ratingStars">
+                    <i class="bi bi-star" data-value="1"></i>
+                    <i class="bi bi-star" data-value="2"></i>
+                    <i class="bi bi-star" data-value="3"></i>
+                    <i class="bi bi-star" data-value="4"></i>
+                    <i class="bi bi-star" data-value="5"></i>
+                </div>
+                <input type="hidden" id="rating" name="rating" value="" required> <!-- Hidden field for rating -->
+            </div>
+
+            <div class="form-group">
+                <label for="comment">Your Comment:</label>
+                <textarea id="comment" name="comment" required></textarea>
+            </div>
+
+
+            <button type="submit" class="btn-submit">Submit Review</button>
+        </form>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const stars = document.querySelectorAll('#ratingStars i');
+            const ratingInput = document.getElementById('rating');
+
+            stars.forEach(star => {
+                star.addEventListener('mouseover', () => {
+                    const value = parseInt(star.getAttribute('data-value'));
+                    updateStars(value);
+                });
+
+                star.addEventListener('mouseout', () => {
+                    const value = parseInt(ratingInput.value) || 0;
+                    updateStars(value);
+                });
+
+                star.addEventListener('click', () => {
+                    const value = parseInt(star.getAttribute('data-value'));
+                    ratingInput.value = value; // Set the rating value to the hidden input
+                    updateStars(value);
+                });
+            });
+
+            function updateStars(value) {
+                stars.forEach(star => {
+                    const starValue = parseInt(star.getAttribute('data-value'));
+                    if (starValue <= value) {
+                        star.classList.add('selected');
+                    } else {
+                        star.classList.remove('selected');
+                    }
+                });
+            }
+        });
+    </script>

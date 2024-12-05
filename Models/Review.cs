@@ -12,6 +12,7 @@
         public Property Property { get; set; }
         public int ReviewerId { get; set; }
         public User Reviewer { get; set; }
+
     }
 
 }

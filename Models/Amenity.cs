@@ -3,10 +3,9 @@
     public class Amenity
     {
         public int Id { get; set; }
-        public string Name { get; set; } // Example: "WiFi", "Air Conditioning"
-       
-        public string IconUrl { get; set; } // Optional
-
+    
+        public required string Name { get; set; }
+        public required string IconUrl { get; set; }
 
         public ICollection<Property> Properties { get; set; } = new List<Property>();
 

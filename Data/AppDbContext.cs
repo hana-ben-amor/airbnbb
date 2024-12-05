@@ -18,12 +18,23 @@ namespace airbnbb.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
-        public DbSet<UserProperty> UserProperties { get; set; } // Add this for the join entity
 
         // Configuring relationships and constraints
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Review>()
+            .HasOne(r => r.Property)
+            .WithMany(p => p.Reviews)
+            .HasForeignKey(r => r.PropertyId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            // One-to-Many: User -> Review
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.Reviewer)
+                .WithMany(u => u.Reviews)
+                .HasForeignKey(r => r.ReviewerId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Many-to-Many relationship between Property and Amenity
             modelBuilder.Entity<Property>()
@@ -34,20 +45,25 @@ namespace airbnbb.Data
                     j => j.HasOne<Amenity>().WithMany().HasForeignKey("AmenityId").OnDelete(DeleteBehavior.Cascade),
                     j => j.HasOne<Property>().WithMany().HasForeignKey("PropertyId").OnDelete(DeleteBehavior.Cascade)
                 );
+            // One-to-Many: User -> Property
+            modelBuilder.Entity<Property>()
+                .HasOne(p => p.Host)
+                .WithMany(u => u.Properties)
+                .HasForeignKey(p => p.HostId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Wishlist>()
+          .HasKey(w => new { w.UserId, w.PropertyId });  // Composite key
 
-            // Many-to-Many relationship between User and Property through UserProperty
-            modelBuilder.Entity<UserProperty>()
-                .HasKey(up => new { up.UserId, up.PropertyId });
+            modelBuilder.Entity<Wishlist>()
+                .HasOne(w => w.User)
+                .WithMany(u => u.Wishlists)  // Assuming a User can have multiple wishlists
+                .HasForeignKey(w => w.UserId);
 
-            modelBuilder.Entity<UserProperty>()
-                .HasOne(up => up.User)
-                .WithMany(u => u.Wishlists) // Wishlist relationship with User
-                .HasForeignKey(up => up.UserId);
+            modelBuilder.Entity<Wishlist>()
+                .HasOne(w => w.Property)
+                .WithMany(p => p.Wishlists)  // Assuming a Property can be in many wishlists
+                .HasForeignKey(w => w.PropertyId);
 
-            modelBuilder.Entity<UserProperty>()
-                .HasOne(up => up.Property)
-                .WithMany(p => p.Wishlists) // Wishlist relationship with Property
-                .HasForeignKey(up => up.PropertyId);
 
             // Seed default roles for Users (e.g., Guest and Host)
             modelBuilder.Entity<User>().HasData(

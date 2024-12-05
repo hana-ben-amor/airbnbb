@@ -165,6 +165,9 @@ namespace airbnbb.Migrations
                     b.Property<decimal>("PricePerNight")
                         .HasColumnType("decimal(65,30)");
 
+                    b.Property<double>("Rating")
+                        .HasColumnType("double");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -260,40 +263,20 @@ namespace airbnbb.Migrations
                         });
                 });
 
-            modelBuilder.Entity("airbnbb.Models.UserProperty", b =>
+            modelBuilder.Entity("airbnbb.Models.Wishlist", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
                     b.Property<int>("PropertyId")
                         .HasColumnType("int");
-
-                    b.Property<int?>("WishlistId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "PropertyId");
-
-                    b.HasIndex("PropertyId");
-
-                    b.HasIndex("WishlistId");
-
-                    b.ToTable("UserProperties");
-                });
-
-            modelBuilder.Entity("airbnbb.Models.Wishlist", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("PropertyId");
 
                     b.ToTable("Wishlists");
                 });
@@ -373,36 +356,27 @@ namespace airbnbb.Migrations
                     b.Navigation("Reviewer");
                 });
 
-            modelBuilder.Entity("airbnbb.Models.UserProperty", b =>
+            modelBuilder.Entity("airbnbb.Models.Wishlist", b =>
                 {
                     b.HasOne("airbnbb.Models.Property", "Property")
+                        .WithMany()
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("airbnbb.Models.User", "User")
+                        .WithMany("Wishlists")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("airbnbb.Models.Property", null)
                         .WithMany("Wishlists")
                         .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("airbnbb.Models.User", "User")
-                        .WithMany("Wishlists")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("airbnbb.Models.Wishlist", null)
-                        .WithMany("UserProperties")
-                        .HasForeignKey("WishlistId");
-
                     b.Navigation("Property");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("airbnbb.Models.Wishlist", b =>
-                {
-                    b.HasOne("airbnbb.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -427,11 +401,6 @@ namespace airbnbb.Migrations
                     b.Navigation("Properties");
 
                     b.Navigation("Wishlists");
-                });
-
-            modelBuilder.Entity("airbnbb.Models.Wishlist", b =>
-                {
-                    b.Navigation("UserProperties");
                 });
 #pragma warning restore 612, 618
         }

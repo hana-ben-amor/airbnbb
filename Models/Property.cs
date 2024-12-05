@@ -1,4 +1,6 @@
-﻿namespace airbnbb.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace airbnbb.Models
 {
     public class Property
     {
@@ -16,12 +18,17 @@
         // New Category Property
         public string Category { get; set; }
 
-        // Relationships
-        public int HostId { get; set; }
-        public User Host { get; set; }
+        // Relationship: Property belongs to one User (Host)
+        public int HostId { get; set; } // Foreign Key to User
+        public User Host { get; set; } // Navigation property
+        public double Rating { get; set; }
         public ICollection<Amenity> Amenities { get; set; }
         public ICollection<Review> Reviews { get; set; }
         // Relationship with Wishlist (Many-to-Many)
-        public ICollection<UserProperty> Wishlists { get; set; }
+
+        public ICollection<Wishlist> Wishlists { get; set; }
+
+
+
     }
 }

@@ -25,7 +25,8 @@ namespace airbnbb.Controllers
             // Pass the properties to the view using ViewBag
             ViewBag.Properties = properties;
 
-            var token = HttpContext.Session.GetString("Token");
+            var token = HttpContext.Request.Cookies["token"];
+    
 
             return View();
         }

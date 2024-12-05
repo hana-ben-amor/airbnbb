@@ -4,10 +4,11 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Beytna</title>
-    <link rel="icon" href="~/logo3.png" type="image/x-icon" />
+    <title>Renter</title>
+    <link rel="icon" href="~/logo2.png" type="image/x-icon" />
     <link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css" rel="stylesheet" />
     <link href="~/css/output.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -48,6 +49,30 @@
                 color: #fb3030;
 /*                 background-color: #fb3030;
  */            }
+
+
+
+        .nav-items a {
+            /*             background-color: #ff5a60;
+             */ color: #888888;
+        
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            text-decoration:none;
+        }
+
+            .nav-items div a {
+                margin: 0;
+            }
+
+            /* Optional: Change background color when hovered */
+            .nav-items a:hover {
+                color: #fb3030;
+                /*                 background-color: #fb3030;
+     */
+            }
     .footer {
     margin: 80px 0 10px;
     text-align: center;
@@ -275,7 +300,10 @@
 
     <!-- Navbar Section -->
     <div class="navbar">
+        <a href="@Url.Action("Index", "Home")">
+       
         <img src="~/logo1.png" class="logo" alt="Logo" />
+        </a>
         <div class="search-bar">
 
             <input type="search" placeholder="Search..." />
@@ -285,9 +313,15 @@
             <div class="rent-house">
                 <p>Rent House</p>
             </div>
-            <div class="wishlist">
-                <p>Wishlist</p>
-            </div>
+            @if (Context.Request.Cookies["token"] != null)
+            {
+                <div class="wishlist">
+                    <a href="@Url.Action("Index", "Wishlist")">
+                        <p>Wishlist</p>
+                    </a>
+                </div>
+            }
+           
             <div class="put-property">
                 <p>Put Property</p>
             </div>
@@ -305,7 +339,7 @@
                 <i class="fas fa-user"></i>
             </button>
             <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-                @if (Context.Session.GetString("Token") != null)
+                @if (Context.Request.Cookies["token"] != null)
                 {
                     <li><a class="dropdown-item" asp-controller="Users" asp-action="Logout">Logout</a></li>
                     <li><a class="dropdown-item" asp-controller="Users" asp-action="Profile">View Profile</a></li>

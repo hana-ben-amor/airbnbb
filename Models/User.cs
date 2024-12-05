@@ -13,8 +13,13 @@ namespace airbnbb.Models
         public string ProfilePictureUrl { get; set; } // Optional
 
         public ICollection<Booking> Bookings { get; set; } // As Guest
-        public ICollection<Property> Properties { get; set; } // As Host
-        public ICollection<UserProperty> Wishlists { get; set; } 
+        public ICollection<Wishlist> Wishlists { get; set; }
+    
+        public ICollection<Property> Properties { get; set; } = new List<Property>(); // One-to-Many with Properties
+
+        public ICollection<Review> Reviews { get; set; } = new List<Review>(); // A user can write many reviews
+
+
     }
 
 }

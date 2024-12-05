@@ -1,15 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+﻿using airbnbb.Data;
+using airbnbb.Models; // Import the User model and any other models you need
+using airbnbb.Services; // Import the DB context or services
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using airbnbb.Models; // Import the User model and any other models you need
-using airbnbb.Data;
-using Microsoft.AspNetCore.Authorization;
-using airbnbb.Services; // Import the DB context or services
 
 namespace airbnbb.Controllers
 {
@@ -45,43 +41,51 @@ namespace airbnbb.Controllers
         [HttpPost]
         public IActionResult Register(RegisterRequest registerRequest)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(registerRequest); // Return the form with validation errors
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return View(registerRequest); // Return the form with validation errors
+            //}
 
-            // Check if email already exists
-            var existingUser = _dbContext.Users.FirstOrDefault(u => u.Email == registerRequest.Email);
-            if (existingUser != null)
-            {
-                ModelState.AddModelError("Email", "Email is already registered.");
-                return View(registerRequest);
-            }
+            //// Check if email already exists
+            //var existingUser = _dbContext.Users.FirstOrDefault(u => u.Email == registerRequest.Email);
+            //if (existingUser != null)
+            //{
+            //    ModelState.AddModelError("Email", "Email is already registered.");
+            //    return View(registerRequest);
+            //}
 
-            // Create a new User instance
-            var newUser = new User
-            {
-                FullName = registerRequest.FullName,
-                Email = registerRequest.Email,
-                Password = registerRequest.Password, // In a real-world app, hash the password before storing
-                PhoneNumber = registerRequest.PhoneNumber,
-                ProfilePictureUrl = registerRequest.ProfilePictureUrl,
-                Role = registerRequest.Role
-            };
+            //// Create a new User instance
+            //var newUser = new User
+            //{
+            //    FullName = registerRequest.FullName,
+            //    Email = registerRequest.Email,
+            //    Password = registerRequest.Password, // In a real-world app, hash the password before storing
+            //    PhoneNumber = registerRequest.PhoneNumber,
+            //    ProfilePictureUrl = registerRequest.ProfilePictureUrl,
+            //    Role = registerRequest.Role
+            //};
 
-            // Save the new user to the database
-            _dbContext.Users.Add(newUser);
-            _dbContext.SaveChanges();
+            //// Save the new user to the database
+            //_dbContext.Users.Add(newUser);
+            //_dbContext.SaveChanges();
 
-            // Redirect to login after successful registration
-            TempData["SuccessMessage"] = "Registration successful! Please login.";
-            return RedirectToAction("Login");
+            //// Redirect to login after successful registration
+            //TempData["SuccessMessage"] = "Registration successful! Please login.";
+            return RedirectToAction("Index","Home");
         }
         public IActionResult Logout()
         {
-            HttpContext.Session.Clear(); // Clear the session
-            return RedirectToAction("Login", "Users"); // Redirect to home or login
+            // Clear the session
+            HttpContext.Session.Clear();
+
+            // Delete the token cookie by setting its expiration to a past date
+            HttpContext.Response.Cookies.Delete("token");
+
+            // Redirect to the home page
+            return RedirectToAction("Index", "Home");
         }
+
+
 
 
         [HttpGet]
@@ -114,11 +118,16 @@ namespace airbnbb.Controllers
 
             var claims = new[]
            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.FullName),
-                new Claim(ClaimTypes.Role, user.Role.ToString())
+
+                new Claim(JwtRegisteredClaimNames.Sub, "JwtSubject"),
+
+                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+                new Claim("Email", user.Email),
+                new Claim("UserId",user.Id.ToString()),
+                new Claim("Name", user.FullName),
+                new Claim("Role", user.Role.ToString())
             };
+            HttpContext.Response.Cookies.Append("userId", user.Id.ToString());
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -127,17 +136,23 @@ namespace airbnbb.Controllers
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(60),
+                expires: DateTime.UtcNow.AddMinutes(60),
                 signingCredentials: signingCredentials
             );
 
             var tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
+  
+            HttpContext.Response.Cookies.Append("token", tokenValue,
+    new Microsoft.AspNetCore.Http.CookieOptions
+    {
+        HttpOnly = true,
+        Secure = true, // Enable in production with HTTPS
+        Expires = DateTime.Now.AddMinutes(60)
+    });
 
-            HttpContext.Session.SetString("Role", user.Role.ToString());
-            HttpContext.Session.SetString("Token", tokenValue);
             TempData["SuccessMessage"] = "Login successful!";
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","Home");
         }
     }
 }
