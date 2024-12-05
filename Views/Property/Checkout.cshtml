@@ -1,12 +1,49 @@
 ﻿@{
     ViewData["Title"] = "Checkout";
+    // Example price per night
+    decimal pricePerNight = ViewBag.Property.PricePerNight;
+
+    // Calculate the number of nights
+    int nights = (ViewBag.CheckoutDate - ViewBag.CheckinDate).Days;
+
+    // Calculate the total price
+    decimal totalPrice = nights * pricePerNight;
 }
 
-<h1>Checkout</h1>
-<p>Property: @ViewBag.Property.Title</p>
-<p>Location: @ViewBag.Property.City, @ViewBag.Property.Country</p>
-<p>Check-in: @ViewBag.CheckinDate.ToString("d")</p>
-<p>Check-out: @ViewBag.CheckoutDate.ToString("d")</p>
+<h1 class="text-center my-4">Checkout</h1>
+<div class="container">
+    <div class="row">
+        <!-- Property Details Section -->
+        <div class="col-md-8 mb-4">
+            <div class="card shadow-sm">
+                <img src="@ViewBag.Property.ImageUrl"
+                     alt="Property Image"
+                     class="card-img-top img-fluid rounded">
+                <div class="card-body">
+                    <h5 class="card-title">@ViewBag.Property.Title</h5>
+                    <p class="card-text">
+                        <strong>Location:</strong> @ViewBag.Property.City, @ViewBag.Property.Country
+                    </p>
+                </div>
+            </div>
+        </div>
 
-<!-- Display the rest of the checkout information, such as pricing and confirmation button -->
-<button class="btn btn-success">Confirm Booking</button>
+      
+        <!-- Payment Section -->
+        <div class="col-md-4">
+            <div class="card shadow-sm p-4">
+                <h5 class="card-title">Reservation Details</h5>
+                <p><strong>Check-in:</strong> @ViewBag.CheckinDate.ToString("d")</p>
+                <p><strong>Check-out:</strong> @ViewBag.CheckoutDate.ToString("d")</p>
+                <p><strong>Price per night:</strong>@pricePerNight.ToString("C")</p>
+                <p><strong>Total nights:</strong> @nights</p>
+                <p><strong>Total price:</strong> <span id="totalPrice">@totalPrice.ToString("C")</span></p>
+                <hr>
+                <h6 class="mt-4">Make a Payment</h6>
+                <button class="btn btn-success w-100 my-2">Pay with Paypal</button>
+                <button class="btn btn-success w-100 my-2">Pay with Credit Card</button>
+                <button class="btn btn-success w-100 my-2">Pay with Stripe</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -2,5 +2,5 @@
 {
     CreditCard,
     PayPal,
-    BankTransfer
+    Stripe
 }
