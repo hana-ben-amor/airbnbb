@@ -249,7 +249,8 @@
                     <input type="date" id="checkoutDate" name="checkoutDate" class="form-control" required>
                 </div>
 
-           
+
+                <input type="hidden" name="propertyId" value="@Model.Id" />  <!-- Property ID hidden field -->
 
                 <button type="submit" class="btn btn-primary btn-block">Book</button>
             </form>

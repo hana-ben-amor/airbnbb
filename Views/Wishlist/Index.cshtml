@@ -8,6 +8,10 @@
     margin-top: 30px;
 }
 
+
+h2{
+    margin-top:20px;
+}
 /* Each property in the wishlist */
 .property-item {
     display: grid;
@@ -110,7 +114,7 @@
                 </div>
 
                 <!-- Book Button -->
-                <a href="@Url.Action("Book", "Property", new { id = item.PropertyId })" class="book-btn">
+                <a href="@Url.Action("Details", "Property", new { id = item.PropertyId })" class="book-btn">
                     Book Now
                 </a>
             </div>

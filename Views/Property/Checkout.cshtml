@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = "Checkout";
+}
+
+<h1>Checkout</h1>
+<p>Property: @ViewBag.Property.Title</p>
+<p>Location: @ViewBag.Property.City, @ViewBag.Property.Country</p>
+<p>Check-in: @ViewBag.CheckinDate.ToString("d")</p>
+<p>Check-out: @ViewBag.CheckoutDate.ToString("d")</p>
+
+<!-- Display the rest of the checkout information, such as pricing and confirmation button -->
+<button class="btn btn-success">Confirm Booking</button>
