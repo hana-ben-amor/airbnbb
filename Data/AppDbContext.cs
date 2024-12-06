@@ -13,7 +13,6 @@ namespace airbnbb.Data
         // DbSets for your entities
         public DbSet<User> Users { get; set; }
         public DbSet<Property> Properties { get; set; }
-        public DbSet<Amenity> Amenities { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Review> Reviews { get; set; }
@@ -35,16 +34,10 @@ namespace airbnbb.Data
                 .WithMany(u => u.Reviews)
                 .HasForeignKey(r => r.ReviewerId)
                 .OnDelete(DeleteBehavior.Restrict);
+       
 
-            // Many-to-Many relationship between Property and Amenity
-            modelBuilder.Entity<Property>()
-                .HasMany(p => p.Amenities)
-                .WithMany(a => a.Properties)
-                .UsingEntity<Dictionary<string, object>>(
-                    "PropertyAmenity",
-                    j => j.HasOne<Amenity>().WithMany().HasForeignKey("AmenityId").OnDelete(DeleteBehavior.Cascade),
-                    j => j.HasOne<Property>().WithMany().HasForeignKey("PropertyId").OnDelete(DeleteBehavior.Cascade)
-                );
+            ////// Many-to-Many relationship between Property and Amenity
+
             // One-to-Many: User -> Property
             modelBuilder.Entity<Property>()
                 .HasOne(p => p.Host)
@@ -64,11 +57,24 @@ namespace airbnbb.Data
                 .WithMany(p => p.Wishlists)  // Assuming a Property can be in many wishlists
                 .HasForeignKey(w => w.PropertyId);
 
+            // **Booking relationships**
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.Guest)  // Linking Booking to User (Guest)
+                .WithMany(u => u.Bookings)  // A user can have multiple bookings
+                .HasForeignKey(b => b.GuestId)
+                .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.Property)  // Linking Booking to Property
+                .WithMany(p => p.Bookings)  // A property can have multiple bookings
+                .HasForeignKey(b => b.PropertyId)
+                .OnDelete(DeleteBehavior.Cascade);
             // Seed default roles for Users (e.g., Guest and Host)
             modelBuilder.Entity<User>().HasData(
                 new User { Id = 1, FullName = "Admin User", Email = "admin@airbnb.com",Password="admin123", Role = UserRole.Host, PhoneNumber = "1234567890",ProfilePictureUrl= "https://th.bing.com/th/id/OIP.g5nSTvKkjrlJL-nvP1LxEwHaHa?w=600&h=600&rs=1&pid=ImgDetMain" }
             );
+
+
         }
     }
 

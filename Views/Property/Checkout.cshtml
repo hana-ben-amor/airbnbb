@@ -1,4 +1,7 @@
 ﻿@{
+    var stripeSecretKey = ViewData["StripeSecretKey"] as string;
+    var paymentIntentId = ViewBag.PaymentIntentId;
+
     ViewData["Title"] = "Checkout";
     // Example price per night
     decimal pricePerNight = ViewBag.Property.PricePerNight;
@@ -10,40 +13,151 @@
     decimal totalPrice = nights * pricePerNight;
 }
 
-<h1 class="text-center my-4">Checkout</h1>
-<div class="container">
-    <div class="row">
-        <!-- Property Details Section -->
-        <div class="col-md-8 mb-4">
-            <div class="card shadow-sm">
-                <img src="@ViewBag.Property.ImageUrl"
-                     alt="Property Image"
-                     class="card-img-top img-fluid rounded">
-                <div class="card-body">
-                    <h5 class="card-title">@ViewBag.Property.Title</h5>
-                    <p class="card-text">
-                        <strong>Location:</strong> @ViewBag.Property.City, @ViewBag.Property.Country
-                    </p>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <!-- Bootstrap CSS (if not already included) -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom Styles for Payment Form */
+        .StripeElement {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .StripeElement--focus {
+            border-color: #28a745;
+        }
+
+        .StripeElement--invalid {
+            border-color: #dc3545;
+        }
+
+        #payment-form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #submit {
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            padding: 12px;
+            width: 100%;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            #submit:hover {
+                background-color: #218838;
+            }
+
+        #error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="text-center my-4">Checkout</h1>
+    <div class="container">
+        <div class="row">
+            <!-- Property Details Section -->
+            <div class="col-md-8 mb-4">
+                <div class="card shadow-sm">
+                    <img src="@ViewBag.Property.ImageUrl"
+                         alt="Property Image"
+                         class="card-img-top img-fluid rounded">
+                    <div class="card-body">
+                        <h5 class="card-title">@ViewBag.Property.Title</h5>
+                        <p class="card-text">
+                            <strong>Location:</strong> @ViewBag.Property.City, @ViewBag.Property.Country
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Section -->
+            <div class="col-md-4">
+                <div class="card shadow-sm p-4">
+                    <h5 class="card-title">Reservation Details</h5>
+                            <p><strong>Check-in:</strong> @ViewBag.CheckinDate.ToString("d")</p>
+                            <p><strong>Check-out:</strong> @ViewBag.CheckoutDate.ToString("d")</p>
+                            <p><strong>Price per night:</strong>@pricePerNight.ToString("C")</p>
+                            <p><strong>Total nights:</strong> @nights</p>
+                            <p><strong>Total price:</strong> <span id="totalPrice">@totalPrice.ToString("C")</span></p>
+                            <hr>
+                            <h6 class="mt-4">Make a Payment</h6>
+                                <form method="post" action="/Property/CreateCheckoutSession">
+                                <input type="hidden" name="propertyId" value="@ViewBag.Property.Id" />
+                                <input type="hidden" name="bookingId" value="@ViewBag.Booking.Id" />
+                                    <div>
+                                    <label for="amount">Total Price:</label>
+                                    <input type="text" id="amount" name="amount" value="@Math.Round(totalPrice, 2)" required />
+
+                                    </div>
+                                    <button type="submit">Pay with Stripe</button>
+                                </form>
+
                 </div>
             </div>
         </div>
-
-      
-        <!-- Payment Section -->
-        <div class="col-md-4">
-            <div class="card shadow-sm p-4">
-                <h5 class="card-title">Reservation Details</h5>
-                <p><strong>Check-in:</strong> @ViewBag.CheckinDate.ToString("d")</p>
-                <p><strong>Check-out:</strong> @ViewBag.CheckoutDate.ToString("d")</p>
-                <p><strong>Price per night:</strong>@pricePerNight.ToString("C")</p>
-                <p><strong>Total nights:</strong> @nights</p>
-                <p><strong>Total price:</strong> <span id="totalPrice">@totalPrice.ToString("C")</span></p>
-                <hr>
-                <h6 class="mt-4">Make a Payment</h6>
-                <button class="btn btn-success w-100 my-2">Pay with Paypal</button>
-                <button class="btn btn-success w-100 my-2">Pay with Credit Card</button>
-                <button class="btn btn-success w-100 my-2">Pay with Stripe</button>
-            </div>
-        </div>
     </div>
-</div>
+   
+    <!-- Stripe JS -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        var stripe = Stripe('pk_test_51PQ7QcP5M2v9mzckbw2iyH7cPpFM0RGCSpxrAaoaQMQ30VBgtJCfFbvxEvOeoqbi5rsgkT2pIPEyncJPl7H9BUfq00CXZLM0p6'); // Public key from your server
+        var elements = stripe.elements();
+
+        // Create a card number element
+        var card = elements.create('card');
+        card.mount('#card-element');
+
+        // Create an expiry date element
+        var expiry = elements.create('expirationDate');
+        expiry.mount('#expiry-element');
+
+        // Create a CVC element
+        var cvc = elements.create('cvc');
+        cvc.mount('#cvc-element');
+
+        // Handle form submission
+        var form = document.getElementById('payment-form');
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const { paymentIntent, error } = await stripe.confirmCardPayment(
+                '@paymentIntentId', {
+                    payment_method: {
+                        card: card,
+                        expiration: expiry,
+                        cvc: cvc
+                    }
+                });
+
+            if (error) {
+                document.getElementById('error-message').textContent = error.message;
+            } else {
+                if (paymentIntent.status === 'succeeded') {
+                    window.location.href = '@Url.Action("PaymentSuccess", "Property")';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<airbnbb.Models.Booking>
+
+@{
+    ViewData["Title"] = "My Bookings";
+}
+
+<h1>My Bookings</h1>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Property</th>
+                <th>Check-In Date</th>
+                <th>Check-Out Date</th>
+                <th>Total Price</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var booking in Model)
+            {
+                <tr>
+                    <td>@booking.Property.Title</td>
+                    <td>@booking.CheckInDate.ToString("MM/dd/yyyy")</td>
+                    <td>@booking.CheckOutDate.ToString("MM/dd/yyyy")</td>
+                    <td>@booking.TotalPrice.ToString("C")</td>
+                    <td>@booking.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>You have no bookings yet.</p>
+}

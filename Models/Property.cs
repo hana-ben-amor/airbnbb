@@ -22,12 +22,12 @@ namespace airbnbb.Models
         public int HostId { get; set; } // Foreign Key to User
         public User Host { get; set; } // Navigation property
         public double Rating { get; set; }
-        public ICollection<Amenity> Amenities { get; set; }
         public ICollection<Review> Reviews { get; set; }
         // Relationship with Wishlist (Many-to-Many)
 
         public ICollection<Wishlist> Wishlists { get; set; }
 
+        public ICollection<Booking> Bookings{ get; set; }
 
 
     }

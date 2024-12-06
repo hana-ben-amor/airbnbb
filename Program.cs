@@ -1,6 +1,7 @@
 
-
+using Stripe;
 using airbnbb.Data;
+using airbnbb.Models;
 using airbnbb.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -14,8 +15,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
                      new MySqlServerVersion(new Version(8, 0, 23)))  // Ensure MySQL version is correct
 );
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["SecretKey"];
 
-builder.Services.AddScoped<AmenityService>();
+// Add Stripe Settings to Configuration
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(options =>

@@ -136,7 +136,7 @@
             border-radius: 20px;
             padding: 5px;
             width: 100%;
-            max-width: 400px; /* Limit width */
+            max-width: 300px; /* Limit width */
         }
 
             .navbar .search-bar input {
@@ -310,11 +310,14 @@
             <button>Search</button>
         </div>
         <div class="nav-items">
-            <div class="rent-house">
-                <p>Rent House</p>
-            </div>
+          
             @if (Context.Request.Cookies["token"] != null)
             {
+                <div class="wishlist">
+                    <a href="@Url.Action("Index", "Booking")">
+                        <p>My Bookings</p>
+                    </a>
+                </div>
                 <div class="wishlist">
                     <a href="@Url.Action("Index", "Wishlist")">
                         <p>Wishlist</p>

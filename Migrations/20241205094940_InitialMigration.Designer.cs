@@ -12,8 +12,8 @@ using airbnbb.Data;
 namespace airbnbb.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241204201512_FixWishlistPropertyRelationship")]
-    partial class FixWishlistPropertyRelationship
+    [Migration("20241205094940_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,42 +24,6 @@ namespace airbnbb.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
-
-            modelBuilder.Entity("PropertyAmenity", b =>
-                {
-                    b.Property<int>("AmenityId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PropertyId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AmenityId", "PropertyId");
-
-                    b.HasIndex("PropertyId");
-
-                    b.ToTable("PropertyAmenity");
-                });
-
-            modelBuilder.Entity("airbnbb.Models.Amenity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("IconUrl")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Amenities");
-                });
 
             modelBuilder.Entity("airbnbb.Models.Booking", b =>
                 {
@@ -268,35 +232,20 @@ namespace airbnbb.Migrations
 
             modelBuilder.Entity("airbnbb.Models.Wishlist", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<int>("PropertyId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("UserId", "PropertyId");
 
                     b.HasIndex("PropertyId");
 
                     b.ToTable("Wishlists");
-                });
-
-            modelBuilder.Entity("PropertyAmenity", b =>
-                {
-                    b.HasOne("airbnbb.Models.Amenity", null)
-                        .WithMany()
-                        .HasForeignKey("AmenityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("airbnbb.Models.Property", null)
-                        .WithMany()
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("airbnbb.Models.Booking", b =>
@@ -304,11 +253,11 @@ namespace airbnbb.Migrations
                     b.HasOne("airbnbb.Models.User", "Guest")
                         .WithMany("Bookings")
                         .HasForeignKey("GuestId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("airbnbb.Models.Property", "Property")
-                        .WithMany()
+                        .WithMany("Bookings")
                         .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -349,9 +298,9 @@ namespace airbnbb.Migrations
                         .IsRequired();
 
                     b.HasOne("airbnbb.Models.User", "Reviewer")
-                        .WithMany()
+                        .WithMany("Reviews")
                         .HasForeignKey("ReviewerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Property");
@@ -362,20 +311,14 @@ namespace airbnbb.Migrations
             modelBuilder.Entity("airbnbb.Models.Wishlist", b =>
                 {
                     b.HasOne("airbnbb.Models.Property", "Property")
-                        .WithMany()
-                        .HasForeignKey("Id")
+                        .WithMany("Wishlists")
+                        .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("airbnbb.Models.User", "User")
                         .WithMany("Wishlists")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("airbnbb.Models.Property", null)
-                        .WithMany("Wishlists")
-                        .HasForeignKey("PropertyId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -392,6 +335,8 @@ namespace airbnbb.Migrations
 
             modelBuilder.Entity("airbnbb.Models.Property", b =>
                 {
+                    b.Navigation("Bookings");
+
                     b.Navigation("Reviews");
 
                     b.Navigation("Wishlists");
@@ -402,6 +347,8 @@ namespace airbnbb.Migrations
                     b.Navigation("Bookings");
 
                     b.Navigation("Properties");
+
+                    b.Navigation("Reviews");
 
                     b.Navigation("Wishlists");
                 });

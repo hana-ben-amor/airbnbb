@@ -282,39 +282,38 @@
 <script>
 
     document.addEventListener("DOMContentLoaded", function () {
-        // Get all the wishlist icons
         const wishlistIcons = document.querySelectorAll('.wishlist-icon');
 
-        // Add click event listeners to each heart icon
-       @*  wishlistIcons.forEach(icon => {
+        wishlistIcons.forEach(icon => {
             icon.addEventListener('click', function () {
                 // Toggle the 'liked' class on the clicked heart icon
                 icon.classList.toggle('liked');
-            }); *@
-        });
+            });
+        })
     });
-    // Wait for the DOM to be fully loaded
-    document.addEventListener("DOMContentLoaded", function () {
-        // Get all header items with filter data
-        const filterItems = document.querySelectorAll('.header-item');
 
-        // Get all property items
-        const propertyItems = document.querySelectorAll('.property-item');
+        // Wait for the DOM to be fully loaded
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get all header items with filter data
+            const filterItems = document.querySelectorAll('.header-item');
 
-        // Add click event listeners to header items
-        filterItems.forEach(item => {
-            item.addEventListener('click', function () {
-                const filterValue = item.getAttribute('data-filter');
+            // Get all property items
+            const propertyItems = document.querySelectorAll('.property-item');
 
-                // Loop through all property items and hide those that do not match the filter
-                propertyItems.forEach(property => {
-                    if (filterValue === "all" || property.getAttribute('data-category') === filterValue) {
-                        property.classList.remove('hidden'); // Show the property
-                    } else {
-                        property.classList.add('hidden'); // Hide the property
-                    }
+            // Add click event listeners to header items
+            filterItems.forEach(item => {
+                item.addEventListener('click', function () {
+                    const filterValue = item.getAttribute('data-filter');
+
+                    // Loop through all property items and hide those that do not match the filter
+                    propertyItems.forEach(property => {
+                        if (filterValue === "all" || property.getAttribute('data-category') === filterValue) {
+                            property.classList.remove('hidden'); // Show the property
+                        } else {
+                            property.classList.add('hidden'); // Hide the property
+                        }
+                    });
                 });
             });
         });
-    });
 </script>
