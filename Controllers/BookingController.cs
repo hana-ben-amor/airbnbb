@@ -16,6 +16,30 @@ namespace airbnbb.Controllers
             _context = context;
         }
 
+        public IActionResult MyBookings(string sortOrder)
+        {
+            // Retrieve user ID from cookies
+            if (!Request.Cookies.TryGetValue("UserId", out string userIdString) || !int.TryParse(userIdString, out int guestId))
+            {
+                return Unauthorized("User not logged in.");
+            }
+
+            ViewData["SortOrder"] = sortOrder;
+
+            var bookings = _context.Bookings
+                .Include(b => b.Property)
+                .Where(b => b.GuestId == guestId);
+
+            // Apply sorting
+            bookings = sortOrder switch
+            {
+                "CheckInDate_Desc" => bookings.OrderByDescending(b => b.CheckInDate),
+                _ => bookings.OrderBy(b => b.CheckInDate),
+            };
+
+            return View(bookings.ToList());
+        }
+
         // Existing BookProperty method
         [HttpPost]
         public async Task<IActionResult> BookProperty(int propertyId, DateTime checkinDate, DateTime checkoutDate)

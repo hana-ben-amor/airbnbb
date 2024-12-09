@@ -12,6 +12,7 @@ namespace airbnbb.Data
 
         // DbSets for your entities
         public DbSet<User> Users { get; set; }
+        public DbSet<Image> Images { get; set; }
         public DbSet<Property> Properties { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Payment> Payments { get; set; }
@@ -21,6 +22,13 @@ namespace airbnbb.Data
         // Configuring relationships and constraints
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<Image>()
+             .HasOne(i => i.Property)  // Each Image belongs to one Property
+             .WithMany(p => p.Images)  // A Property can have many Images
+             .HasForeignKey(i => i.PropertyId)  // Foreign key in Image
+             .OnDelete(DeleteBehavior.Cascade);
+
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Review>()
             .HasOne(r => r.Property)

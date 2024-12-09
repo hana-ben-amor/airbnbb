@@ -3,6 +3,44 @@
 }
 
 <style>
+   
+    .property-details img {
+        width: 300px; /* Full width of the container */
+        height: 400px; /* Fixed height for the main image */
+        object-fit: cover; /* Ensures image doesn't stretch and keeps aspect ratio */
+        border-radius: 10px;
+    }
+
+    .property-image img {
+        width: 120px; /* Fixed width for the small images */
+        height: 120px; /* Fixed height for the small images */
+        object-fit: cover; /* Ensures images fit within the container without stretching */
+        border-radius: 5px;
+    }
+
+    .property-images {
+        display: flex;
+        overflow-x: auto; /* Allows scrolling */
+        gap: 10px;
+        padding-bottom: 10px;
+    }
+
+    .property-image {
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: border 0.3s;
+    }
+
+        .property-image:hover {
+            border-color: #ff5a60; /* Highlight image on hover */
+        }
+
+    /* Ensure the main image is large */
+/*     .property-details img {
+        width: 100%; /* Full width of the container */
+   /*      height: auto; */
+   /*      border-radius: 10px; */
+   /*  }  */
     .property-details {
         display: flex;
         flex-direction: column;
@@ -218,18 +256,24 @@
             background-color: #ff2a35;
         }
 </style>
-
 <div class="container text-center">
     <div class="row">
         <div class="col-8">
-
             <div class="property-details">
-                <img src="@Model.ImageUrl" alt="Property Image">
-                          </div>
+                <img id="mainImage" src="@Model.ImageUrl" alt="Property Image">
+                <div class="property-images">
+                    @foreach (var image in @Model.Images)
+                    {
+                        <div class="property-image" onclick="changeImage('@image.Url')">
+                            <img src="@image.Url" alt="@image.Description" />
+                        </div>
+                    }
+                </div>
+            </div>
         </div>
+
         <div class="col-4">
             <h1>@Model.Title</h1>
-          
             <p>@Model.Description</p>
             <div class="row">
                 <div class="col"> <p> <i class="bi bi-geo"></i> @Model.City, @Model.Country</p></div>
@@ -237,7 +281,6 @@
                     <p>@Model.PricePerNight.ToString("C")/<i class="bi bi-moon-stars"></i></p>
                 </div>
             </div>
-          
             <form method="post" action="/Property/BookProperty">
                 <div class="form-group">
                     <label for="checkinDate">Check-In Date:</label>
@@ -249,29 +292,26 @@
                     <input type="date" id="checkoutDate" name="checkoutDate" class="form-control" required>
                 </div>
 
-
-                <input type="hidden" name="propertyId" value="@Model.Id" />  <!-- Property ID hidden field -->
+                <input type="hidden" name="propertyId" value="@Model.Id" />
 
                 <button type="submit" class="btn btn-primary btn-block">Book</button>
             </form>
+
             @if (TempData["SuccessMessage"] != null)
             {
-        <div class="alert alert-success">
+                <div class="alert alert-success">
                     @TempData["SuccessMessage"]
-        </div>
+                </div>
             }
 
             @if (TempData["ErrorMessage"] != null)
             {
-        <div class="alert alert-danger">
+                <div class="alert alert-danger">
                     @TempData["ErrorMessage"]
-        </div>
+                </div>
             }
-
+        </div>
     </div>
-    </div>
-
-
 
 <!-- Reviews Section -->
     <section class="reviews">
@@ -345,6 +385,7 @@
                 });
             });
 
+
             function updateStars(value) {
                 stars.forEach(star => {
                     const starValue = parseInt(star.getAttribute('data-value'));
@@ -356,4 +397,7 @@
                 });
             }
         });
+        function changeImage(imageUrl) {
+            document.getElementById('mainImage').src = imageUrl;
+        }
     </script>

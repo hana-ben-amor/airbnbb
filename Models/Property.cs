@@ -26,6 +26,7 @@ namespace airbnbb.Models
         // Relationship with Wishlist (Many-to-Many)
 
         public ICollection<Wishlist> Wishlists { get; set; }
+        public ICollection<Image> Images { get; set; }
 
         public ICollection<Booking> Bookings{ get; set; }
 

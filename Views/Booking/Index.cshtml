@@ -5,6 +5,7 @@
 }
 
 <h1>My Bookings</h1>
+<hr />
 
 @if (Model != null && Model.Any())
 {
@@ -23,10 +24,16 @@
             {
                 <tr>
                     <td>@booking.Property.Title</td>
+                 
                     <td>@booking.CheckInDate.ToString("MM/dd/yyyy")</td>
                     <td>@booking.CheckOutDate.ToString("MM/dd/yyyy")</td>
                     <td>@booking.TotalPrice.ToString("C")</td>
-                    <td>@booking.Status</td>
+                    <td>
+                        <span class="badge @GetStatusClass(booking.Status.ToString())">
+                            @booking.Status
+                        </span>
+                    </td>
+                 
                 </tr>
             }
         </tbody>
@@ -35,4 +42,17 @@
 else
 {
     <p>You have no bookings yet.</p>
+}
+
+@functions {
+    private string GetStatusClass(string status)
+    {
+        return status switch
+        {
+            "Confirmed" => "bg-success text-light",
+            "Cancelled" => "bg-danger text-light",
+            "Pending" => "bg-secondary text-light",
+            _ => "bg-light text-dark"
+        };
+    }
 }

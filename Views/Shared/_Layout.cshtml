@@ -19,6 +19,87 @@
 </head>
 
 <style>
+    /* Ensures the footer stays at the bottom of the page */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 400vh;
+}
+
+.footer {
+    background-color: #ECDDD4;
+    color: #000;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: auto; /* Pushes the footer to the bottom */
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: space-around;
+}
+
+.footer-links div {
+    margin: 0 20px;
+}
+
+.footer-links h3 {
+    border-bottom: 2px solid #fff;
+    padding-bottom: 5px;
+    font-size: 16px;
+}
+
+.footer-links a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    margin: 5px 0;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+.social-media {
+    margin: 20px 0;
+}
+
+.social-media a {
+    color: #fff;
+    margin: 0 10px;
+    text-decoration: none;
+}
+
+.social-media a i {
+    font-size: 20px;
+}
+
+            .social-media a i:hover{
+                font-size: 25px;
+                    color: #FF7B7F;
+            }
+
+.footer hr {
+    background-color: #999;
+    height: 1px;
+    width: 100%;
+    border: 0;
+    margin: 20px 0;
+}
+
+.footer p {
+    padding-bottom: 15px;
+}
+
+.copyright {
+    font-size: 12px;
+}
 
     .nav-items {
         display: flex;
@@ -73,29 +154,7 @@
                 /*                 background-color: #fb3030;
      */
             }
-    .footer {
-    margin: 80px 0 10px;
-    text-align: center;
-}
-
-.footer a {
-    text-decoration: none;
-    color: #999;
-    font-size: 22px;
-    margin: 0 10px;
-}
-
-.footer hr {
-    background-color: #999;
-    height: 1px;
-    width: 100%;
-    border: 0;
-    margin: 20px 0;
-}
-
-.footer p {
-    padding-bottom: 15px;
-}
+   
 
 
 
@@ -326,7 +385,9 @@
             }
            
             <div class="put-property">
-                <p>Put Property</p>
+                <a href="@Url.Action("Create", "Property")">
+                    <p>Put Property</p>
+                </a>
             </div>
             <div>
                 <i class="fas fa-globe"></i>
@@ -386,6 +447,54 @@
         <p>Copyright &copy, OJ 2023</p>
     </div> *@
   
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="logo">
+                <a href="@Url.Action("Index", "Home")">
+
+                    <img src="~/logo1.png" class="logo" alt="Logo"  width="30%"/>
+                </a>
+            </div>
+            <div class="footer-links">
+                <div>
+                    <h3>Weebly Themes</h3>
+                    <ul>
+                        <li><a href="#">Pre-sale FAQs</a></li>
+                        <li><a href="#">Submit a Ticket</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="#">Theme Tweak</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Showcase</h3>
+                    <ul>
+                        <li><a href="#">Widgetkit</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>About Us</h3>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Affiliates</a></li>
+                        <li><a href="#">Resources</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="social-media">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fas fa-rss"></i></a>
+            <a href="#"><i class="fab fa-google-plus-g"></i></a>
+            <a href="#"><i class="fab fa-flickr"></i></a>
+        </div>
+        <p class="copyright">© Copyright. All rights reserved.</p>
+    </footer>
 
     <script>
         var navBar = document.getElementById("navBar");

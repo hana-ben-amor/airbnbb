@@ -25,9 +25,12 @@ public class PropertyController : Controller
     public IActionResult Details(int id)
     {
         var property = _context.Properties
+            .Include(p => p.Images)  // Eager load images
             .Include(p => p.Reviews)  // Eager load reviews
                 .ThenInclude(r => r.Reviewer) // Optionally load Reviewer (User)
             .FirstOrDefault(p => p.Id == id);
+
+
         if (property == null)
         {
             return NotFound();
@@ -222,6 +225,75 @@ public class PropertyController : Controller
         return RedirectToAction("Details", "Property", new { id = booking.PropertyId });
     }
 
+    [HttpGet]
+    public IActionResult CheckIfLiked(int propertyId)
+    {
+        try
+        {
+            // Retrieve user ID from cookies
+            if (!Request.Cookies.TryGetValue("UserId", out string userIdString) || !int.TryParse(userIdString, out int userId))
+            {
+                return Unauthorized("User not logged in.");
+            }
+
+            // Check if the property is in the user's wishlist
+            var isLiked = _context.Wishlists
+                .Any(w => w.UserId == userId && w.PropertyId == propertyId);
+
+            return Json(new { isLiked });
+        }
+        catch (Exception ex)
+        {
+            // Log the error and return a failure response
+            return StatusCode(500, "Internal server error");
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ToggleWishlist([FromBody] WishlistToggleRequest request)
+    {
+        // Retrieve user ID from cookies
+        if (!Request.Cookies.TryGetValue("UserId", out string userIdString) || !int.TryParse(userIdString, out int userId))
+        {
+            return Unauthorized("User not logged in.");
+        }
+
+        var property = await _context.Properties.FirstOrDefaultAsync(p => p.Id == request.PropertyId);
+        if (property == null)
+        {
+            return NotFound("Property not found.");
+        }
+
+        // Check if the property is already in the user's wishlist
+        var wishlistItem = await _context.Wishlists
+            .FirstOrDefaultAsync(w => w.UserId == userId && w.PropertyId == request.PropertyId);
+
+        if (request.IsLiked)
+        {
+            if (wishlistItem == null)
+            {
+                // Add the property to the wishlist
+                wishlistItem = new Wishlist
+                {
+                    UserId = userId,
+                    PropertyId = request.PropertyId
+                };
+                _context.Wishlists.Add(wishlistItem);
+            }
+        }
+        else
+        {
+            if (wishlistItem != null)
+            {
+                // Remove the property from the wishlist
+                _context.Wishlists.Remove(wishlistItem);
+            }
+        }
+
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
 
     public IActionResult Cancel()
     {

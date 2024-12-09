@@ -13,15 +13,6 @@
     decimal totalPrice = nights * pricePerNight;
 }
 
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout</title>
-    <!-- Bootstrap CSS (if not already included) -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         /* Custom Styles for Payment Form */
         .StripeElement {
@@ -32,6 +23,11 @@
             margin-bottom: 15px;
         }
 
+        #submit img {
+            margin-right: 10px;
+            width: 120px; /* Increased logo size */
+            height:20px;
+        }
         .StripeElement--focus {
             border-color: #28a745;
         }
@@ -50,7 +46,7 @@
         }
 
         #submit {
-            background-color: #28a745;
+            background-color: #6772e5; /* Stripe color */
             color: white;
             font-size: 16px;
             padding: 12px;
@@ -58,11 +54,19 @@
             border-radius: 5px;
             border: none;
             cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             transition: background-color 0.3s ease;
         }
 
             #submit:hover {
-                background-color: #218838;
+                background-color: #5469d4;
+            }
+
+            #submit img {
+                margin-right: 10px;
+                width: 20px; /* Adjust logo size */
             }
 
         #error-message {
@@ -71,8 +75,7 @@
             margin-top: 10px;
         }
     </style>
-</head>
-<body>
+
     <h1 class="text-center my-4">Checkout</h1>
     <div class="container">
         <div class="row">
@@ -95,31 +98,74 @@
             <div class="col-md-4">
                 <div class="card shadow-sm p-4">
                     <h5 class="card-title">Reservation Details</h5>
-                            <p><strong>Check-in:</strong> @ViewBag.CheckinDate.ToString("d")</p>
-                            <p><strong>Check-out:</strong> @ViewBag.CheckoutDate.ToString("d")</p>
-                            <p><strong>Price per night:</strong>@pricePerNight.ToString("C")</p>
-                            <p><strong>Total nights:</strong> @nights</p>
-                            <p><strong>Total price:</strong> <span id="totalPrice">@totalPrice.ToString("C")</span></p>
-                            <hr>
-                            <h6 class="mt-4">Make a Payment</h6>
-                                <form method="post" action="/Property/CreateCheckoutSession">
-                                <input type="hidden" name="propertyId" value="@ViewBag.Property.Id" />
-                                <input type="hidden" name="bookingId" value="@ViewBag.Booking.Id" />
-                                    <div>
-                                    <label for="amount">Total Price:</label>
-                                    <input type="text" id="amount" name="amount" value="@Math.Round(totalPrice, 2)" required />
+                    <p><strong>Check-in:</strong> @ViewBag.CheckinDate.ToString("d")</p>
+                    <p><strong>Check-out:</strong> @ViewBag.CheckoutDate.ToString("d")</p>
+                    <p><strong>Price per night:</strong> @pricePerNight.ToString("C")</p>
+                    <p><strong>Total nights:</strong> @nights</p>
+                    <p><strong>Total price:</strong> <span id="totalPrice">@totalPrice.ToString("C")</span></p>
+                    <hr>
+                    <h6 class="mt-4">Make a Payment</h6>
+                    <form method="post" action="/Property/CreateCheckoutSession">
+                        <input type="hidden" name="propertyId" value="@ViewBag.Property.Id" />
+                        <input type="hidden" name="bookingId" value="@ViewBag.Booking.Id" />
+                  @*       <div>
+                            <label for="amount">Total Price:</label>
+                            <input type="text" id="amount" name="amount" value="@Math.Round(totalPrice, 2)" required readonly />
+                        </div> *@
+                        <button type="submit" id="submit">
 
-                                    </div>
-                                    <button type="submit">Pay with Stripe</button>
-                                </form>
+                        Pay with <b><i> Stripe</i></b>
+                        </button>
+                    <div id="paypal-button-container" class="mt-3">
+                        <!-- PayPal button will be injected here by JavaScript -->
 
+                    </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-   
+
     <!-- Stripe JS -->
     <script src="https://js.stripe.com/v3/"></script>
+<!-- PayPal SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=ASw7PhpScMHI31SsIaVoRKRAg0tG5zAKYMsrDaMOg_DrKeQlWCTC2HU-gaM9WnLyhHEA3VJWJrdV67B1&currency=EUR"></script>
+
+<script>
+    // Ensure the PayPal button is only rendered after the SDK is loaded
+    window.onload = function () {
+        var totalPrice = '@totalPrice'; // Pass the total price from the backend
+        paypal.Buttons({
+            style: {
+                layout: 'vertical',
+                color: 'blue',
+                shape: 'rect',
+                label: 'pay',
+            },
+            createOrder: function (data, actions) {
+                var formattedTotalPrice = parseFloat(totalPrice).toFixed(2);  // Format totalPrice with two decimals
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: formattedTotalPrice.toString()  // Ensure the amount is a valid string
+                        }
+                    }]
+                });
+            },
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function (details) {
+                    // Handle success
+                    alert('Payment completed by ' + details.payer.name.given_name);
+                    // Redirect to a success page or perform another action
+                    window.location.href = '@Url.Action("PaymentSuccess", "Property")';
+                });
+            },
+            onError: function (err) {
+                alert('Payment failed: ' + err);
+            }
+        }).render('#paypal-button-container');  // Render the PayPal button in the container
+    }
+</script>
     <script>
         var stripe = Stripe('pk_test_51PQ7QcP5M2v9mzckbw2iyH7cPpFM0RGCSpxrAaoaQMQ30VBgtJCfFbvxEvOeoqbi5rsgkT2pIPEyncJPl7H9BUfq00CXZLM0p6'); // Public key from your server
         var elements = stripe.elements();
@@ -138,17 +184,17 @@
 
         // Handle form submission
         var form = document.getElementById('payment-form');
-        form.addEventListener('submit', async function(event) {
+        form.addEventListener('submit', async function (event) {
             event.preventDefault();
 
             const { paymentIntent, error } = await stripe.confirmCardPayment(
                 '@paymentIntentId', {
-                    payment_method: {
-                        card: card,
-                        expiration: expiry,
-                        cvc: cvc
-                    }
-                });
+                payment_method: {
+                    card: card,
+                    expiration: expiry,
+                    cvc: cvc
+                }
+            });
 
             if (error) {
                 document.getElementById('error-message').textContent = error.message;
@@ -159,5 +205,4 @@
             }
         });
     </script>
-</body>
-</html>
+

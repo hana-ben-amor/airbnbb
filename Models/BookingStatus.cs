@@ -2,5 +2,5 @@
 {
     Pending,
     Confirmed,
-    Canceled
+    Cancelled
 }

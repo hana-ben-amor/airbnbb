@@ -144,6 +144,7 @@
         display: flex;
         flex-wrap: nowrap; /* Prevent wrapping */
         gap: 20px;
+        margin-bottom:40px;
         margin-top: 30px;
         overflow-x: auto; /* Enable horizontal scrolling */
         padding-bottom: 20px; /* Space for scrollbar */
@@ -152,6 +153,15 @@
     .property-container {
         display: flex;
         gap: 20px;
+    }
+
+    .properties-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .properties-container {
+        -ms-overflow-style: none; /* Hide scrollbar in Internet Explorer */
+        scrollbar-width: none; /* Hide scrollbar in Firefox */
     }
 
     .property-item {
@@ -215,6 +225,225 @@
             font-weight: bold;
             margin-top: 10px;
         }
+
+    .statistics-container {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+    }
+
+    .stat-item {
+        width: 23%;
+        background-color: #FF5A60;
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease;
+    
+    }
+
+    /* Shade variations for each stat item */
+    .stat-item-1 {
+        background-color: #FF5A60; /* Main color */
+    }
+
+    .stat-item-2 {
+        background-color: #FF8C91; /* Lighter shade */
+    }
+
+    .stat-item-3 {
+        background-color: #FF2E3D; /* Darker shade */
+    }
+
+    .stat-item-4 {
+        background-color: #FF6F7F; /* Slightly lighter shade */
+    }
+
+    .stat-item h3 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+
+    .stat-item p {
+        font-size: 1rem;
+    }
+
+    .stat-item:hover {
+        transform: translateY(-5px);
+    }
+
+    p.lead {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #555;
+    }
+
+    h4 {
+        font-size: 1rem;
+        font-weight: bold;
+        margin-top: 20px;
+    }
+
+    .text-muted {
+        font-size: 1rem;
+        color: #888;
+    }
+
+    h2 {
+        font-family: 'Arial', sans-serif;
+        font-size: 2rem;
+        color: #FF5A60;
+        margin-bottom: 20px;
+    }
+    img.img-fluid {
+        width: 100%;
+        max-width: 450px;
+        border-radius: 50%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .ceo-words{
+        padding: 40px 80px;
+    }
+
+    .testimonials {
+    background-color: #f9f9f9;
+    padding: 50px 0;
+}
+
+.testimonials h2 {
+    font-family: 'Arial', sans-serif;
+    font-size: 2.5rem;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 40px;
+}
+
+.testimonial-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 10px;
+    background-color: #fff;
+    overflow: hidden;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.testimonial-image {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    margin: 20px auto;
+    border: 4px solid #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.testimonial-text {
+    font-style: italic;
+    color: #555;
+    font-size: 1rem;
+    margin-bottom: 15px;
+}
+
+.card-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.card-body p {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.card-body strong {
+    font-size: 1.2rem;
+            color: #FF5A60;
+}
+
+/* Fade-in animation */
+.testimonial-card {
+    opacity: 0;
+    animation: fadeIn 0.6s ease forwards;
+}
+
+.testimonial-card:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.testimonial-card:nth-child(2) {
+    animation-delay: 0.4s;
+}
+
+.testimonial-card:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+    .newsletter {
+        background-color: #f8f9fa;
+        padding: 60px 0;
+        text-align: center;
+    }
+
+        .newsletter h2 {
+            font-family: 'Arial', sans-serif;
+            font-size: 2.5rem;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+    .newsletter-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+        .newsletter-form input {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            border: 2px solid #ccc;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+            .newsletter-form input:focus {
+                border-color: #FF5A60;
+            }
+
+        .newsletter-form button {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            background-color: #FF5A60;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+            .newsletter-form button:hover {
+                background-color: #FF7B7F;
+                color:white;
+                transform: translateY(-3px);
+            }
+
+            .newsletter-form button:active {
+                transform: translateY(1px);
+            }
+
+
 </style>
 
 <section>
@@ -260,21 +489,111 @@
                                 <i class="fas fa-star empty"></i> <!-- Empty star -->
                             }
                         }
-                            @if (Context.Request.Cookies["token"] != null)
-                            {
-                                <!-- Wishlist heart icon -->
-                                <i class="fas fa-heart wishlist-icon" data-property-id="@property.Id"></i>
-                            }
+                           
 
                     </div>
 
-       
 
+                    @if (Context.Request.Cookies["token"] != null)
+                    {
+                        <!-- Wishlist heart icon -->
+                        <i class="fas fa-heart wishlist-icon" data-property-id="@property.Id"></i>
+                    }
                 </div>
          
             }
         </div>
     </div>
+    <section class="statistics">
+        <div class="statistics-container">
+            <div class="stat-item stat-item-1">
+                <h3>+20k</h3>
+                <p>Satisfied Clients</p>
+            </div>
+            <div class="stat-item stat-item-2">
+                <h3>+3k</h3>
+                <p>Homes Available</p>
+            </div>
+            <div class="stat-item stat-item-3">
+                <h3>+23k</h3>
+                <p>Bookings Made</p>
+            </div>
+            <div class="stat-item stat-item-4">
+                <h3>2k</h3>
+                <p>Cities Covered</p>
+            </div>
+        </div>
+    </section>
+    <div class="container ceo-words">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <img src="owner.png" alt="Owner Image" class="img-fluid rounded-circle shadow-lg">
+            </div>
+            <div class="col-md-6">
+                <h2 class="font-weight-bold">Our Commitment to Client Satisfaction</h2>
+                <p class="lead">At <strong>Renter</strong>, we are dedicated to providing exceptional service and ensuring the satisfaction of every client. Our team is committed to being responsive, reliable, and trustworthy in every interaction.</p>
+                <p class="lead">We work hard to create lasting relationships with our clients, built on trust, transparency, and excellence. Your satisfaction is our top priority, and we continuously strive to improve and innovate to serve you better.</p>
+
+                <div class="mt-4">
+                    <p class="font-italic">"We believe in building strong, lasting relationships with every client. Your happiness is our success!"</p>
+                    <h4 class="text-secondary">Anastasia-Rose</h4>
+                    <p class="text-muted">CEO of Renter</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+   <section class="testimonials py-5">
+    <h2 class="text-center mb-4">What Our Guests Say</h2>
+    <div class="row">
+        <!-- Testimonial 1 -->
+        <div class="col-md-4">
+            <div class="card shadow testimonial-card">
+                <img src="guest1.jpg" alt="Guest 1" class="card-img-top rounded-circle testimonial-image">
+                <div class="card-body text-center">
+                    <p class="testimonial-text">"Amazing stay! The property was exactly as described. Highly recommend!"</p>
+                    <p><strong>John Doe</strong></p>
+                    <p>Rating: ★★★★☆</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Testimonial 2 -->
+        <div class="col-md-4">
+            <div class="card shadow testimonial-card">
+                <img src="guest3.jpg" alt="Guest 2" class="card-img-top rounded-circle testimonial-image">
+                <div class="card-body text-center">
+                    <p class="testimonial-text">"The best vacation I’ve ever had. Truly amazing experience!"</p>
+                    <p><strong>Jane Smith</strong></p>
+                    <p>Rating: ★★★★★</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Testimonial 3 -->
+        <div class="col-md-4">
+            <div class="card shadow testimonial-card">
+                <img src="img2.jpg" alt="Guest 3" class="card-img-top rounded-circle testimonial-image">
+                <div class="card-body text-center">
+                    <p class="testimonial-text">"A great place to relax and unwind. Would definitely return!"</p>
+                    <p><strong>Michael Johnson</strong></p>
+                    <p>Rating: ★★★★☆</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <section class="newsletter py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Subscribe to Our Newsletter</h2>
+            <form action="#" class="newsletter-form d-flex justify-content-center">
+                <input type="email" class="form-control" placeholder="Enter your email" required>
+                <button type="submit" class="btn btn-primary ms-2">Subscribe</button>
+            </form>
+        </div>
+    </section>
 
 
   
@@ -284,13 +603,52 @@
     document.addEventListener("DOMContentLoaded", function () {
         const wishlistIcons = document.querySelectorAll('.wishlist-icon');
 
+        // Get the liked status for each property from the server (or cookie)
         wishlistIcons.forEach(icon => {
+            const propertyId = icon.getAttribute('data-property-id');
+
+            // Assuming you send a request to check if the user has liked the property
+            fetch(`/Property/CheckIfLiked?propertyId=${propertyId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.isLiked) {
+                        icon.classList.add('liked'); // Set initial state based on server response
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking liked status:', error);
+                });
+
+            // Toggle the 'liked' class on click
             icon.addEventListener('click', function () {
-                // Toggle the 'liked' class on the clicked heart icon
                 icon.classList.toggle('liked');
+                toggleWishlistStatus(propertyId, icon.classList.contains('liked'));
             });
-        })
+        });
     });
+
+    // Function to update the wishlist status on the server
+    function toggleWishlistStatus(propertyId, isLiked) {
+        fetch('/Property/ToggleWishlist', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                propertyId: propertyId,
+                isLiked: isLiked
+            })
+        }).then(response => {
+            if (response.ok) {
+                console.log('Wishlist status updated.');
+            } else {
+                console.error('Failed to update wishlist status.');
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
 
         // Wait for the DOM to be fully loaded
         document.addEventListener("DOMContentLoaded", function () {
