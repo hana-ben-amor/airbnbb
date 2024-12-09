@@ -1,99 +1,201 @@
-﻿@{
+﻿@model BookingStatistic
+
+@{
     ViewData["Title"] = "Dashboard";
 }
-    <style>
 
-        body {
-            background-color: #f8f9fa;
+<style>
+    .scrollable-sidebar {
+        max-height: 520px;
+        overflow-y: auto;
+        padding: 20px;
+    }
+
+        .scrollable-sidebar::-webkit-scrollbar {
+            display: none; /* Hide scrollbar in Webkit browsers */
         }
-        .sidebar {
-            min-height: 100vh;
-            background-color: #343a40;
-            color: white;
-        }
-        .card {
-            margin-bottom: 20px;
-        }
-    </style>
 
-<body>
+    .scrollable-sidebar {
+        -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
+        scrollbar-width: none; /* Hide scrollbar in Firefox */
+    }
+</style>
 
-
-        <div class="container mt-3">
-            <h2>Dashboard</h2>
+<div class="container mt-4">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-md-8">
             <div class="row">
-                <div class="col-md-3">
-                    <div class="card text-white bg-primary">
+                <!-- Revenue Card -->
+                <div class="col-md-4">
+                    <div class="card text-white" style="background-color: #F7888C;">
                         <div class="card-body">
-                            <h5 class="card-title">Total Likes</h5>
-                            <p class="card-text">50,120</p>
+                            <h5 class="card-title">Total Revenue</h5>
+                            <p class="card-text">@Model.TotalRevenue.ToString("F2")</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card text-white bg-warning">
+
+                <!-- Total Bookings Card -->
+                <div class="col-md-4">
+                    <div class="card text-white" style="background-color: #FF6F7F;">
                         <div class="card-body">
-                            <h5 class="card-title">Comments</h5>
-                            <p class="card-text">20,220</p>
+                            <h5 class="card-title">Total Bookings</h5>
+                            <p class="card-text">@Model.TotalBookings</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card text-white bg-info">
+
+                <!-- Active Bookings Card -->
+                <div class="col-md-4">
+                    <div class="card text-white" style="background-color: #FFD2E3;">
                         <div class="card-body">
-                            <h5 class="card-title">Total Share</h5>
-                            <p class="card-text">10,320</p>
+                            <h5 class="card-title">Confirmed Bookings</h5>
+                            <p class="card-text">@Model.ConfirmedBookings</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <h3 class="mt-4">Recent Activity</h3>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Joined</th>
-                        <th>Type</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Prem Shahi</td>
-                        <td>premshahi@gmail.com</td>
-                        <td>2022-02-12</td>
-                        <td>New</td>
-                        <td>Liked</td>
-                    </tr>
-                    <tr>
-                        <td>Deepa Chand</td>
-                        <td>deepachand@gmail.com</td>
-                        <td>2022-02-12</td>
-                        <td>Member</td>
-                        <td>Liked</td>
-                    </tr>
-                    <tr>
-                        <td>Manisha Chand</td>
-                        <td>prakashhai@gmail.com</td>
-                        <td>2022-02-13</td>
-                        <td>Member</td>
-                        <td>Liked</td>
-                    </tr>
-                    <tr>
-                        <td>Pratima Shahi</td>
-                        <td>manishachand@gmail.com</td>
-                        <td>2022-02-14</td>
-                        <td>New</td>
-                        <td>Liked</td>
-                    </tr>
-                </tbody>
-            </table>
+            <!-- Combined Charts Row -->
+            <div class="row mt-4">
+                <!-- Income Growth Chart -->
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm hover-shadow-lg">
+                        <div class="card-body">
+                            <h5 class="card-title">Income Growth</h5>
+                            <canvas id="incomeGrowthChart" width="420" height="420"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pie Chart -->
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm hover-shadow-lg">
+                        <div class="card-body">
+                            <h5 class="card-title">Booking Categories</h5>
+                            <canvas id="bookingCategoriesChart" width="420" height="230"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Sidebar for Latest Reviews -->
+        <div class="col-md-4">
+            <div class="card shadow-sm hover-shadow-lg" style="border-radius:10%">
+                <div class="card-body scrollable-sidebar">
+                    <h5 class="card-title" style="color: #FD2E3D;padding-top:10px;padding-bottom:10px;">Latest Reviews</h5>
+                    <ul class="list-group">
+                        @foreach (var review in Model.LatestReviews)
+                        {
+                            <li class="list-group-item">
+                                <span class="text-muted">@review.Comment</span>
+                                <div>
+                                    <small class="text-muted d-block">Rating: @review.Rating ★</small>
+                                    <small class="text-muted d-block">Posted on: @review.Date.ToString("g")</small>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mt-4" style="margin-top:30px">
+        <!-- Latest Properties Card -->
+        <div class="col-md-12">
+            <div class="card shadow-sm hover-shadow-lg">
+                <div class="card-body">
+                    <h5 class="card-title" style="color: #FD2E3D;margin-bottom:30px">Latest Properties Added</h5>
+                    <div class="list-group">
+                        <!-- Property 1 -->
+                        <div class="list-group-item d-flex justify-content-between align-items-center" style="background-color: #F0F8FF; border-radius: 8px;">
+                            <div>
+                                <h6 class="mb-1" style="color: #1E3A8A;">Villa Sunray</h6>
+                                <p class="mb-1" style="color: #6B7280;">Owner: John Doe</p>
+                                <p class="mb-0" style="color: #34D399;">Verified: Yes</p>
+                            </div>
+                            <div>
+                                <small class="text-muted">Added on: 2024-12-09</small>
+                            </div>
+                        </div>
+                        <!-- Property 2 -->
+                        <div class="list-group-item d-flex justify-content-between align-items-center" style="background-color: #FFEBE8; border-radius: 8px;">
+                            <div>
+                                <h6 class="mb-1" style="color: #1E3A8A;">Downtown Apartment</h6>
+                                <p class="mb-1" style="color: #6B7280;">Owner: Alice Green</p>
+                                <p class="mb-0" style="color: #FF0000;">Verified: No</p>
+
+                            </div>
+                            <div>
+                                <small class="text-muted">Added on: 2024-12-08</small>
+                            </div>
+                        </div>
+                        <!-- Property 3 -->
+                        <div class="list-group-item d-flex justify-content-between align-items-center" style="background-color: #F0F8FF; border-radius: 8px;">
+                            <div>
+                                <h6 class="mb-1" style="color: #1E3A8A;">Beachfront Condo</h6>
+                                <p class="mb-1" style="color: #6B7280;">Owner: Michael Smith</p>
+                                <p class="mb-0" style="color: #34D399;">Verified: Yes</p>
+                            </div>
+                            <div>
+                                <small class="text-muted">Added on: 2024-12-07</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-@*     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
- *@    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Line Chart: Income Growth
+    var ctx2 = document.getElementById('incomeGrowthChart').getContext('2d');
+    var incomeGrowthChart = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June'], // Example months
+            datasets: [{
+                label: 'Income Growth',
+                data: [5000, 7000, 8000, 10000, 12000, 15000], // Example income data
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Pie Chart: Booking Categories
+    var ctx3 = document.getElementById('bookingCategoriesChart').getContext('2d');
+    var bookingCategoriesChart = new Chart(ctx3, {
+        type: 'pie',
+        data: {
+            labels: ['Confirmed', 'Pending', 'Cancelled'],
+            datasets: [{
+                data: [300, 50, 100], // Example data for categories
+                backgroundColor: ['#4FC2C2', '#FFD2E3', '#FF0000'],
+                borderColor: ['#4FC2C2', '#FFD2E3', '#FF0000'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+</script>

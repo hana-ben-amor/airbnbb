@@ -127,7 +127,14 @@ namespace airbnbb.Controllers
                 new Claim("Name", user.FullName),
                 new Claim("Role", user.Role.ToString())
             };
-            HttpContext.Response.Cookies.Append("Role", user.Role.ToString());
+            HttpContext.Response.Cookies.Append("Role", user.Role.ToString(),
+                 new CookieOptions
+                 {
+                     Expires = DateTime.UtcNow.AddMinutes(60), // Set the expiration time
+                     HttpOnly = true, // Optional: Makes the cookie inaccessible to JavaScript
+                     Secure = true, // Optional: Makes the cookie sent over HTTPS only
+                     SameSite = SameSiteMode.Strict // Optional: Prevents sending the cookie with cross-site requests
+                 });
             HttpContext.Response.Cookies.Append(
      "userId",
      user.Id.ToString(),

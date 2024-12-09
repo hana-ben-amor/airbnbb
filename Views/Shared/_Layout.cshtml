@@ -23,15 +23,15 @@
 body {
     display: flex;
     flex-direction: column;
-    min-height: 400vh;
+    height: 100%;
 }
 
 .footer {
-    background-color: #ECDDD4;
-    color: #000;
-    text-align: center;
-    padding: 20px 0;
-    margin-top: auto; /* Pushes the footer to the bottom */
+        background-color: #2C3E50; /* A deep teal color */
+        color: white;
+        padding: 20px;
+        text-align: center;
+        margin-top: 30px;
 }
 
 .footer-container {
@@ -404,19 +404,15 @@ body {
                         <a href="@Url.Action("Index", "Wishlist")">
                         <p>Wishlist</p>
                     </a>
-                </div>
+                    </div>
+                    <div class="put-property">
+                        <a href="@Url.Action("Create", "Property")">
+                            <p>Put Property</p>
+                        </a>
+                    </div>
                 }
             }
            
-            <div class="put-property">
-                <a href="@Url.Action("Create", "Property")">
-                    <p>Put Property</p>
-                </a>
-            </div>
-            <div>
-                <i class="fas fa-globe"></i>
-                <p>EN</p>
-            </div>
         </div>
 
 
@@ -472,7 +468,8 @@ body {
         <p>Copyright &copy, OJ 2023</p>
     </div> *@
   
-    <footer class="footer">
+        <footer class="footer" style="position: relative; margin-top: 30px;">
+
         <div class="footer-container">
             <div class="logo">
                 <a href="@Url.Action("Index", "Home")">
@@ -480,7 +477,7 @@ body {
                     <img src="~/logo1.png" class="logo" alt="Logo"  width="30%"/>
                 </a>
             </div>
-            <div class="footer-links">
+          @*   <div class="footer-links">
                 <div>
                     <h3>Weebly Themes</h3>
                     <ul>
@@ -509,8 +506,8 @@ body {
                         <li><a href="#">Resources</a></li>
                     </ul>
                 </div>
-            </div>
-        </div>
+            </div>*@
+        </div> 
         <div class="social-media">
             <a href="#"><i class="fab fa-facebook-f"></i></a>
             <a href="#"><i class="fab fa-twitter"></i></a>

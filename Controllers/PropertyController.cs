@@ -246,7 +246,7 @@ public class PropertyController : Controller
         catch (Exception ex)
         {
             // Log the error and return a failure response
-            return StatusCode(500, "Internal server error");
+            return StatusCode(500, "Internal server error"+ex.Message);
         }
     }
 
