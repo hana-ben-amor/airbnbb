@@ -30,7 +30,27 @@ namespace airbnbb.Controllers
 
 
 
- 
+        [HttpPost]
+        public IActionResult AddUser(User model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Save the user to the database (assuming you have a DbContext called _context)
+                _dbContext.Users.Add(model);
+                _dbContext.SaveChanges();
+
+                // Set success message for display in the view
+                TempData["SuccessMessage"] = "User added successfully!";
+
+                // You may return to the current view or return JSON response for a better user experience
+                return RedirectToAction("Index"); // Replace with the correct action if necessary
+            }
+
+            // If model is not valid, return to the same view with error messages
+            return View(model);
+        }
+
+
 
         [HttpGet]
         public IActionResult Register()

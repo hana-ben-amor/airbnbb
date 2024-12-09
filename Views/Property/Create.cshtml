@@ -1,0 +1,94 @@
+﻿@model airbnbb.Models.Property
+
+@{
+    ViewData["Title"] = "Create Property";
+}
+
+
+<div class="container ">
+    <h2>Create a New Property</h2>
+    <form method="post" enctype="multipart/form-data">
+        <div class="row">
+            <!-- Property Title -->
+            <div class="col-md-6 mb-3">
+                <label for="Title" class="form-label">Property Title</label>
+                <input type="text" class="form-control" id="Title" name="Title" value="@Model.Title" required>
+            </div>
+
+            <!-- Property Description -->
+            <div class="col-md-6 mb-3">
+                <label for="Description" class="form-label">Description</label>
+                <textarea class="form-control" id="Description" name="Description" rows="4" required>@Model.Description</textarea>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Price Per Night -->
+            <div class="col-md-6 mb-3">
+                <label for="PricePerNight" class="form-label">Price per Night (€)</label>
+                <input type="number" class="form-control" id="PricePerNight" name="PricePerNight" value="@Model.PricePerNight" required>
+            </div>
+
+            <!-- Property Location -->
+            <div class="col-md-6 mb-3">
+                <label for="Location" class="form-label">Location</label>
+                <input type="text" class="form-control" id="Location" name="Location" value="@Model.Country" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Choose Image Upload or URL -->
+            <div class="col-md-12 mb-3">
+                <label class="form-label">Images</label><br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="imageOption" id="uploadOption" value="upload" checked>
+                    <label class="form-check-label" for="uploadOption">Upload Images</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="imageOption" id="urlOption" value="url">
+                    <label class="form-check-label" for="urlOption">Enter Image URLs</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="uploadImagesRow">
+            <!-- Upload Images -->
+            <div class="col-md-12 mb-3">
+                <label for="Images" class="form-label">Upload Property Images</label>
+                <input type="file" class="form-control" id="Images" name="Images" accept="image/*" multiple>
+            </div>
+        </div>
+
+        <div class="row" id="urlImagesRow" style="display: none;">
+            <!-- Image URLs -->
+            <div class="col-md-12 mb-3">
+                <label for="ImageUrls" class="form-label">Image URLs</label>
+                <textarea class="form-control" id="ImageUrls" name="ImageUrls" rows="4" placeholder="Enter one URL per line."></textarea>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary">Create Property</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Toggle between URL input and file upload
+    const uploadOption = document.getElementById('uploadOption');
+    const urlOption = document.getElementById('urlOption');
+    const uploadImagesRow = document.getElementById('uploadImagesRow');
+    const urlImagesRow = document.getElementById('urlImagesRow');
+
+    uploadOption.addEventListener('change', function () {
+        uploadImagesRow.style.display = 'block';
+        urlImagesRow.style.display = 'none';
+    });
+
+    urlOption.addEventListener('change', function () {
+        uploadImagesRow.style.display = 'none';
+        urlImagesRow.style.display = 'block';
+    });
+</script>
+

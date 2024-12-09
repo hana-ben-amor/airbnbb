@@ -6,6 +6,7 @@ using airbnbb.Data;
 using Stripe;
 using Stripe.Checkout;
 using Microsoft.Extensions.Options;
+using airbnbb.Services;
 
 public class PropertyController : Controller
 {
@@ -20,6 +21,62 @@ public class PropertyController : Controller
         _configuration = configuration;
         _stripeSettings = stripeSettings.Value;
     }
+
+    public async Task<IActionResult> Index()
+    {
+        var properties = await _context.Properties.ToListAsync(); // Convert DbSet to List
+        return View(properties); // Pass the list to the view
+    }
+
+    public IActionResult Create()
+    {
+        var property = new Property();
+        return View(property);  // Ensure you're passing a valid Property model
+    }
+
+
+    [HttpPost]
+    public async Task<IActionResult> Create(Property model, string imageOption, List<IFormFile> Images, string ImageUrls)
+    {
+        if (ModelState.IsValid)
+        {
+            // Handle image upload or URLs
+            if (imageOption == "upload" && Images != null && Images.Count > 0)
+            {
+                foreach (var file in Images)
+                {
+                    // Save the uploaded image to your server (storage logic)
+                    var filePath = Path.Combine("wwwroot/images", file.FileName); // Adjust the path as needed
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+
+                    // Create and add the Image object to the Property's Image collection
+                    model.Images.Add(new Image { Url = filePath, Description = "Uploaded image" });
+                }
+            }
+            else if (imageOption == "url" && !string.IsNullOrEmpty(ImageUrls))
+            {
+                // Parse URLs from the textarea and create Image objects
+                var urls = ImageUrls.Split('\n').Select(url => url.Trim()).Where(url => !string.IsNullOrEmpty(url));
+                foreach (var url in urls)
+                {
+                    model.Images.Add(new Image { Url = url, Description = "Image URL" });
+                }
+            }
+
+            // Save the property to the database (example logic)
+            _context.Add(model);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index)); // Redirect after successful creation
+        }
+
+        return View(model);
+    }
+
+
 
     // GET: Property/Details/{id}
     public IActionResult Details(int id)

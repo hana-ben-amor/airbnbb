@@ -1,0 +1,36 @@
+﻿@model airbnbb.Models.User
+
+@{
+    ViewData["Title"] = "Add User";
+}
+
+<form asp-action="AddUser" method="post">
+    <div class="mb-3">
+        <label for="FullName" class="form-label">Full Name</label>
+        <input type="text" class="form-control" id="FullName" name="FullName" required>
+    </div>
+    <div class="mb-3">
+        <label for="Email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="Email" name="Email" required>
+    </div>
+    <div class="mb-3">
+        <label for="Password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="Password" name="Password" required>
+    </div>
+    <div class="mb-3">
+        <label for="PhoneNumber" class="form-label">Phone Number</label>
+        <input type="text" class="form-control" id="PhoneNumber" name="PhoneNumber">
+    </div>
+    <div class="mb-3">
+        <label for="ProfilePictureUrl" class="form-label">Profile Picture URL</label>
+        <input type="url" class="form-control" id="ProfilePictureUrl" name="ProfilePictureUrl">
+    </div>
+    <div class="mb-3">
+        <label for="Role" class="form-label">Role</label>
+        <select class="form-control" id="Role" name="Role">
+            <option value="Admin">Admin</option>
+            <option value="User">User</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Add User</button>
+</form>

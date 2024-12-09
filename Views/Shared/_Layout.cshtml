@@ -363,11 +363,14 @@ body {
        
         <img src="~/logo1.png" class="logo" alt="Logo" />
         </a>
+         @if (Context.Request.Cookies["token"] != null)
+            {
         <div class="search-bar">
 
             <input type="search" placeholder="Search..." />
             <button>Search</button>
         </div>
+            }
         <div class="nav-items">
           
             @if (Context.Request.Cookies["token"] != null)
@@ -386,7 +389,7 @@ body {
                         </a>
                     </div>
                     <div class="admin-panel">
-                        <a href="@Url.Action("Index", "Users")">
+                        <a href="@Url.Action("Index", "Property")">
                             <p>Properties </p>
                         </a>
                     </div>
@@ -405,7 +408,7 @@ body {
                         <p>Wishlist</p>
                     </a>
                     </div>
-                    <div class="put-property">
+                    <div class="wishlist">
                         <a href="@Url.Action("Create", "Property")">
                             <p>Put Property</p>
                         </a>
