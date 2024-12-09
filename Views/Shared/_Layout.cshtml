@@ -372,16 +372,40 @@ body {
           
             @if (Context.Request.Cookies["token"] != null)
             {
-                <div class="wishlist">
-                    <a href="@Url.Action("Index", "Booking")">
-                        <p>My Bookings</p>
-                    </a>
-                </div>
-                <div class="wishlist">
-                    <a href="@Url.Action("Index", "Wishlist")">
+                var role = Context.Request.Cookies["Role"];
+                if (role == "Admin")
+                {
+                    <div class="admin-panel">
+                        <a href="@Url.Action("Dashboard", "Admin")">
+                            <p>Admin Panel</p>
+                        </a>
+                    </div>
+                    <div class="admin-panel">
+                        <a href="@Url.Action("Index", "Users")">
+                            <p>Users</p>
+                        </a>
+                    </div>
+                    <div class="admin-panel">
+                        <a href="@Url.Action("Index", "Users")">
+                            <p>Properties </p>
+                        </a>
+                    </div>
+                }
+                if (role != "Admin")
+                {
+
+
+                    <div class="wishlist">
+                        <a href="@Url.Action("Index", "Booking")">
+                            <p>My Bookings</p>
+                        </a>
+                    </div>
+                    <div class="wishlist">
+                        <a href="@Url.Action("Index", "Wishlist")">
                         <p>Wishlist</p>
                     </a>
                 </div>
+                }
             }
            
             <div class="put-property">
@@ -405,6 +429,7 @@ body {
             <ul class="dropdown-menu" aria-labelledby="profileDropdown">
                 @if (Context.Request.Cookies["token"] != null)
                 {
+
                     <li><a class="dropdown-item" asp-controller="Users" asp-action="Logout">Logout</a></li>
                     <li><a class="dropdown-item" asp-controller="Users" asp-action="Profile">View Profile</a></li>
                     <li><a class="dropdown-item" asp-controller="Users" asp-action="Edit">Edit Profile</a></li>

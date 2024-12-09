@@ -1,0 +1,99 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+    <style>
+
+        body {
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            min-height: 100vh;
+            background-color: #343a40;
+            color: white;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+    </style>
+
+<body>
+
+
+        <div class="container mt-3">
+            <h2>Dashboard</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card text-white bg-primary">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Likes</h5>
+                            <p class="card-text">50,120</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-warning">
+                        <div class="card-body">
+                            <h5 class="card-title">Comments</h5>
+                            <p class="card-text">20,220</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-info">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Share</h5>
+                            <p class="card-text">10,320</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="mt-4">Recent Activity</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Joined</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Prem Shahi</td>
+                        <td>premshahi@gmail.com</td>
+                        <td>2022-02-12</td>
+                        <td>New</td>
+                        <td>Liked</td>
+                    </tr>
+                    <tr>
+                        <td>Deepa Chand</td>
+                        <td>deepachand@gmail.com</td>
+                        <td>2022-02-12</td>
+                        <td>Member</td>
+                        <td>Liked</td>
+                    </tr>
+                    <tr>
+                        <td>Manisha Chand</td>
+                        <td>prakashhai@gmail.com</td>
+                        <td>2022-02-13</td>
+                        <td>Member</td>
+                        <td>Liked</td>
+                    </tr>
+                    <tr>
+                        <td>Pratima Shahi</td>
+                        <td>manishachand@gmail.com</td>
+                        <td>2022-02-14</td>
+                        <td>New</td>
+                        <td>Liked</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+@*     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+ *@    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>

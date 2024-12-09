@@ -132,9 +132,10 @@ public class PropertyController : Controller
         var successUrl = "https://localhost:7175/Property/Success?session_id={CHECKOUT_SESSION_ID}";
 
         var cancelUrl = "https://localhost:7196/Home/cancel";
+        // Stripe expects the amount as long (in cents)
+        var amountInDecimal = decimal.Parse(amount, System.Globalization.CultureInfo.InvariantCulture); // Parse as decimal
+        var amountInCents = (long)(amountInDecimal*1000);
         StripeConfiguration.ApiKey = _stripeSettings.SecretKey;
-            var amountInDecimal = decimal.Parse(amount, System.Globalization.CultureInfo.InvariantCulture); // Parse as decimal
-        var amountInCents = (long)(amountInDecimal); // Convert to cents (smallest unit)
 
 
         var options = new SessionCreateOptions

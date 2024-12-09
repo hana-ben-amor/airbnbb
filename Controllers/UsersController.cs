@@ -127,6 +127,7 @@ namespace airbnbb.Controllers
                 new Claim("Name", user.FullName),
                 new Claim("Role", user.Role.ToString())
             };
+            HttpContext.Response.Cookies.Append("Role", user.Role.ToString());
             HttpContext.Response.Cookies.Append(
      "userId",
      user.Id.ToString(),
@@ -160,7 +161,10 @@ namespace airbnbb.Controllers
     });
 
             TempData["SuccessMessage"] = "Login successful!";
-
+            if (user.Role.HasFlag(UserRole.Admin))
+            {
+                return RedirectToAction("Dashboard", "Admin"); // Redirect to Admin dashboard
+            }
             return RedirectToAction("Index","Home");
         }
     }

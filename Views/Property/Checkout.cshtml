@@ -108,10 +108,12 @@
                     <form method="post" action="/Property/CreateCheckoutSession">
                         <input type="hidden" name="propertyId" value="@ViewBag.Property.Id" />
                         <input type="hidden" name="bookingId" value="@ViewBag.Booking.Id" />
-                  @*       <div>
+                   @*      <div>
                             <label for="amount">Total Price:</label>
                             <input type="text" id="amount" name="amount" value="@Math.Round(totalPrice, 2)" required readonly />
                         </div> *@
+                    <input type="hidden" name="amount" value="@totalPrice.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)" />
+
                         <button type="submit" id="submit">
 
                         Pay with <b><i> Stripe</i></b>
@@ -147,7 +149,7 @@
                 return actions.order.create({
                     purchase_units: [{
                         amount: {
-                            value: formattedTotalPrice.toString()  // Ensure the amount is a valid string
+                            value: formattedTotalPrice  // Ensure the amount is a valid string
                         }
                     }]
                 });
