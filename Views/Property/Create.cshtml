@@ -71,6 +71,7 @@
                 <input asp-for="ImageUrl" class="form-control" placeholder="Enter Main Image URL" />
                 <span asp-validation-for="ImageUrl" class="text-danger"></span>
             </div>
+
            
                 <div class="form-group">
                     <label for="imageUrls">Image URLs (Optional):</label>
@@ -81,12 +82,6 @@
                     <input type="file" name="imageUpload" class="form-control" accept="image/*" multiple>
                 </div>
 
-            <div class="col-md-6 mb-3">
-                <label for="Images" class="form-label"><i class="bi bi-images"></i> Enter Additional Image URLs</label>
-                <input type="text" name="Images[0].Url" class="form-control" placeholder="Image URL 1" />
-                <input type="text" name="Images[1].Url" class="form-control mt-2" placeholder="Image URL 2" />
-                <input type="text" name="Images[2].Url" class="form-control mt-2" placeholder="Image URL 3" />
-            </div>
         </div>
 
         <div class="d-flex justify-content-end mt-4">

@@ -352,7 +352,7 @@
                 <div class="property-images">
                     @foreach (var image in @Model.Images)
                     {
-                        <div class="property-image" onclick="changeImage('@image.Url')">
+                        <div class="property-image" onclick="changeImage(this)" >
                             <img src="@image.Url" alt="@image.Description" />
                         </div>
                     }
@@ -521,7 +521,17 @@
                 });
             }
         });
-        function changeImage(imageUrl) {
-            document.getElementById('mainImage').src = imageUrl;
+        // function changeImage(imageUrl) {
+        //     document.getElementById('mainImage').src = imageUrl;
+  
+        // }
+        function changeImage(thumbnailElement) {
+            // Get the main image element
+            const mainImage = document.getElementById('mainImage');
+
+            // Swap the `src` of the main image and the clicked thumbnail
+            const tempSrc = mainImage.src;
+            mainImage.src = thumbnailElement.firstElementChild.src;
+            thumbnailElement.firstElementChild.src = tempSrc;
         }
     </script>
