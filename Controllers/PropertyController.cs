@@ -30,18 +30,29 @@ public class PropertyController : Controller
         return View(properties); // Pass the list to the view
     }
 
-    //[HttpGet]
-    //public IActionResult UploadImages(int propertyId)
-    //{
-    //    var property = _context.Properties.Find(propertyId);
-    //    if (property == null)
-    //    {
-    //        return NotFound(); // Return 404 if property doesn't exist
-    //    }
+    [HttpPost]
+    public IActionResult Update(Property model)
+    {
+      
+            var property = _context.Properties.FirstOrDefault(p => p.Id == model.Id);
+            if (property != null)
+            {
+                property.Title = model.Title;
+                property.PricePerNight = model.PricePerNight;
+                property.Category = model.Category;
+                property.Status = model.Status;
 
-    //    // Return the view with the property model
-    //    return View(property);
-    //}
+                _context.SaveChanges();
+                TempData["SuccessMessage"] = "Property updated successfully.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Property not found.";
+            }
+            return RedirectToAction("Index");
+     // Adjust this if you want to return to a different view
+    }
+
     [HttpGet]
     public IActionResult UploadImages(int propertyId)
     {
