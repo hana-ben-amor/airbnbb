@@ -33,7 +33,7 @@
             <!-- Address -->
             <div class="col-md-6 mb-3">
                 <label asp-for="Address" class="form-label"><i class="bi bi-house-door"></i> Address</label>
-                <input asp-for="Address" class="form-control" placeholder="Enter Property Address" />
+                <input id="address" asp-for="Address" class="form-control" placeholder="Enter Property Address" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
 
@@ -87,6 +87,44 @@
     </form>
 </div>
 
-@section Scripts {
+
+   @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <!-- Include Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCmWFYgVGgxm-mhK1HdWME3zHQCzBULGt0&libraries=places&callback=initAutocomplete" async defer></script>
+
+    <script>
+        function initAutocomplete() {
+            const input = document.getElementById('address');
+            const autocomplete = new google.maps.places.Autocomplete(input);
+            autocomplete.setFields(['address_component', 'geometry']);
+
+            autocomplete.addListener('place_changed', function () {
+                const place = autocomplete.getPlace();
+                if (!place.geometry) {
+                    return;
+                }
+
+                // // Set the address components
+                // const address = place.formatted_address;
+                // document.getElementById('address').value = address;
+
+                // Loop through the address components and fill in the city and country
+                let city = '';
+                let country = '';
+                place.address_components.forEach(function (component) {
+                    const types = component.types;
+                    if (types.indexOf('locality') > -1) {
+                        city = component.long_name;
+                    }
+                    if (types.indexOf('country') > -1) {
+                        country = component.long_name;
+                    }
+                });
+
+                document.getElementById('City').value = city;
+                document.getElementById('Country').value = country;
+            });
+        }
+    </script>
 }
