@@ -4,91 +4,89 @@
     ViewData["Title"] = "Create Property";
 }
 
+<div class="container mt-5">
+    <h2 class="text-center mb-4"><i class="bi bi-house-door"></i> Create a New Property</h2>
 
-<div class="container ">
-    <h2>Create a New Property</h2>
-    <form method="post" enctype="multipart/form-data">
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
         <div class="row">
-            <!-- Property Title -->
+            <!-- Title -->
             <div class="col-md-6 mb-3">
-                <label for="Title" class="form-label">Property Title</label>
-                <input type="text" class="form-control" id="Title" name="Title" value="@Model.Title" required>
+                <label asp-for="Title" class="form-label"><i class="bi bi-fonts"></i> Title</label>
+                <input asp-for="Title" class="form-control" placeholder="Enter Property Title" />
+                <span asp-validation-for="Title" class="text-danger"></span>
             </div>
 
-            <!-- Property Description -->
+            <!-- Description -->
             <div class="col-md-6 mb-3">
-                <label for="Description" class="form-label">Description</label>
-                <textarea class="form-control" id="Description" name="Description" rows="4" required>@Model.Description</textarea>
+                <label asp-for="Description" class="form-label"><i class="bi bi-pencil"></i> Description</label>
+                <textarea asp-for="Description" class="form-control" rows="5" placeholder="Enter Property Description"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-        </div>
 
-        <div class="row">
-            <!-- Price Per Night -->
+            <!-- Price per Night -->
             <div class="col-md-6 mb-3">
-                <label for="PricePerNight" class="form-label">Price per Night (€)</label>
-                <input type="number" class="form-control" id="PricePerNight" name="PricePerNight" value="@Model.PricePerNight" required>
+                <label asp-for="PricePerNight" class="form-label"><i class="bi bi-currency-dollar"></i> Price per Night</label>
+                <input asp-for="PricePerNight" class="form-control" placeholder="Enter Price per Night" />
+                <span asp-validation-for="PricePerNight" class="text-danger"></span>
             </div>
 
-            <!-- Property Location -->
+            <!-- Address -->
             <div class="col-md-6 mb-3">
-                <label for="Location" class="form-label">Location</label>
-                <input type="text" class="form-control" id="Location" name="Location" value="@Model.Country" required>
+                <label asp-for="Address" class="form-label"><i class="bi bi-house-door"></i> Address</label>
+                <input asp-for="Address" class="form-control" placeholder="Enter Property Address" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+
+            <!-- City -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="City" class="form-label"><i class="bi bi-map"></i> City</label>
+                <input asp-for="City" class="form-control" placeholder="Enter City" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+
+            <!-- Country -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="Country" class="form-label"><i class="bi bi-flag"></i> Country</label>
+                <input asp-for="Country" class="form-control" placeholder="Enter Country" />
+                <span asp-validation-for="Country" class="text-danger"></span>
+            </div>
+
+            <!-- Capacity -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="Capacity" class="form-label"><i class="bi bi-person"></i> Capacity</label>
+                <input asp-for="Capacity" class="form-control" placeholder="Enter Capacity" />
+                <span asp-validation-for="Capacity" class="text-danger"></span>
+            </div>
+
+            <!-- Category -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="Category" class="form-label"><i class="bi bi-tags"></i> Category</label>
+                <input asp-for="Category" class="form-control" placeholder="Enter Category" />
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+
+            <!-- Image URL -->
+            <div class="col-md-6 mb-3">
+                <label asp-for="ImageUrl" class="form-label"><i class="bi bi-image"></i> Image URL</label>
+                <input asp-for="ImageUrl" class="form-control" placeholder="Enter Main Image URL" />
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            </div>
+
+            <!-- Multiple Image URLs -->
+            <div class="col-md-6 mb-3">
+                <label for="Images" class="form-label"><i class="bi bi-images"></i> Enter Additional Image URLs</label>
+                <input type="text" name="Images[0].Url" class="form-control" placeholder="Image URL 1" />
+                <input type="text" name="Images[1].Url" class="form-control mt-2" placeholder="Image URL 2" />
+                <input type="text" name="Images[2].Url" class="form-control mt-2" placeholder="Image URL 3" />
             </div>
         </div>
 
-        <div class="row">
-            <!-- Choose Image Upload or URL -->
-            <div class="col-md-12 mb-3">
-                <label class="form-label">Images</label><br>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="imageOption" id="uploadOption" value="upload" checked>
-                    <label class="form-check-label" for="uploadOption">Upload Images</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="imageOption" id="urlOption" value="url">
-                    <label class="form-check-label" for="urlOption">Enter Image URLs</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="row" id="uploadImagesRow">
-            <!-- Upload Images -->
-            <div class="col-md-12 mb-3">
-                <label for="Images" class="form-label">Upload Property Images</label>
-                <input type="file" class="form-control" id="Images" name="Images" accept="image/*" multiple>
-            </div>
-        </div>
-
-        <div class="row" id="urlImagesRow" style="display: none;">
-            <!-- Image URLs -->
-            <div class="col-md-12 mb-3">
-                <label for="ImageUrls" class="form-label">Image URLs</label>
-                <textarea class="form-control" id="ImageUrls" name="ImageUrls" rows="4" placeholder="Enter one URL per line."></textarea>
-            </div>
-        </div>
-
-        <!-- Submit Button -->
-        <div class="d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary">Create Property</button>
+        <div class="d-flex justify-content-end mt-4">
+            <button type="submit" class="btn btn-success"><i class="bi bi-check-lg"></i> Create Property</button>
         </div>
     </form>
 </div>
 
-<script>
-    // Toggle between URL input and file upload
-    const uploadOption = document.getElementById('uploadOption');
-    const urlOption = document.getElementById('urlOption');
-    const uploadImagesRow = document.getElementById('uploadImagesRow');
-    const urlImagesRow = document.getElementById('urlImagesRow');
-
-    uploadOption.addEventListener('change', function () {
-        uploadImagesRow.style.display = 'block';
-        urlImagesRow.style.display = 'none';
-    });
-
-    urlOption.addEventListener('change', function () {
-        uploadImagesRow.style.display = 'none';
-        urlImagesRow.style.display = 'block';
-    });
-</script>
-
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

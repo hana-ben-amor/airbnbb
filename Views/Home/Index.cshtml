@@ -456,7 +456,7 @@
             <div class="header-item" data-filter="Countryside"><i class="fas fa-tree"></i><span>Countryside</span></div>
             <div class="header-item" data-filter="ski"><i class="fas fa-snowboarding"></i><span>Ski-in/out</span></div>
             <div class="header-item" data-filter="cabins"><i class="fas fa-home"></i><span>Cabins</span></div>
-            <div class="header-item" data-filter="rides"><i class="fas fa-bicycle"></i><span>Rides</span></div>
+            <div class="header-item" data-filter="Rides"><i class="fas fa-bicycle"></i><span>Rides</span></div>
         </div>
     </header>
     <div class="properties-container">
@@ -494,7 +494,7 @@
                     </div>
 
 
-                    @if (Context.Request.Cookies["token"] != null)
+                    @if (Context.Request.Cookies["token"] != null && Context.Request.Cookies["Role"]!="Admin")
                     {
                         <!-- Wishlist heart icon -->
                         <i class="fas fa-heart wishlist-icon" data-property-id="@property.Id"></i>

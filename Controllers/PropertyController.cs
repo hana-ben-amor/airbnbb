@@ -28,52 +28,87 @@ public class PropertyController : Controller
         return View(properties); // Pass the list to the view
     }
 
-    public IActionResult Create()
+    [HttpPost]
+    public async Task<IActionResult> Delete(int id)
     {
-        var property = new Property();
-        return View(property);  // Ensure you're passing a valid Property model
+        var property = await _context.Properties.FindAsync(id);
+        if (property == null)
+        {
+            return NotFound();
+        }
+
+        _context.Properties.Remove(property);
+        await _context.SaveChangesAsync();
+
+        return Json(new { success = true });  // Return a success response
     }
 
 
-    [HttpPost]
-    public async Task<IActionResult> Create(Property model, string imageOption, List<IFormFile> Images, string ImageUrls)
+
+
+    [HttpGet]
+    public IActionResult Create()
     {
-        if (ModelState.IsValid)
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(Property model, string[] Images)
+    {
+        // Initialize a new property object
+        var property = new Property
         {
-            // Handle image upload or URLs
-            if (imageOption == "upload" && Images != null && Images.Count > 0)
+            Title = model.Title,
+            Description = model.Description,
+            PricePerNight = model.PricePerNight,
+            Address = model.Address,
+            ImageUrl = model.ImageUrl,
+            City = model.City,
+            Country = model.Country,
+            Capacity = model.Capacity,
+            Category = model.Category,
+            Status = PropertyStatus.Available,
+            HostId = 2, // Replace with the logged-in host's ID
+            Rating = 0,
+            Images = new List<Image>() // Initialize the collection
+        };
+
+        try
+        {
+            // Add the property to the context and save changes to get the PropertyId
+            _context.Properties.Add(property);
+            await _context.SaveChangesAsync();  // This saves the property and generates an Id
+
+            // Now that the property has an Id, we can associate the images
+            if (Images != null && Images.Length > 0)
             {
-                foreach (var file in Images)
+                foreach (var imageUrl in Images)
                 {
-                    // Save the uploaded image to your server (storage logic)
-                    var filePath = Path.Combine("wwwroot/images", file.FileName); // Adjust the path as needed
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    if (!string.IsNullOrWhiteSpace(imageUrl))
                     {
-                        await file.CopyToAsync(stream);
+                        var image = new Image
+                        {
+                            Url = imageUrl,
+                            PropertyId = property.Id // Set the PropertyId after the property is saved
+                        };
+                        _context.Images.Add(image);  // Add the image to the context
                     }
-
-                    // Create and add the Image object to the Property's Image collection
-                    model.Images.Add(new Image { Url = filePath, Description = "Uploaded image" });
-                }
-            }
-            else if (imageOption == "url" && !string.IsNullOrEmpty(ImageUrls))
-            {
-                // Parse URLs from the textarea and create Image objects
-                var urls = ImageUrls.Split('\n').Select(url => url.Trim()).Where(url => !string.IsNullOrEmpty(url));
-                foreach (var url in urls)
-                {
-                    model.Images.Add(new Image { Url = url, Description = "Image URL" });
                 }
             }
 
-            // Save the property to the database (example logic)
-            _context.Add(model);
+            // Save images to the database
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index)); // Redirect after successful creation
+            TempData["SuccessMessage"] = "Property created successfully!";
+            return RedirectToAction("Index", "Home");
         }
-
-        return View(model);
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"StackTrace: {ex.StackTrace}");
+            TempData["ErrorMessage"] = "There was an error creating the property.";
+            return View(model);
+        }
     }
 
 
@@ -101,7 +136,7 @@ public class PropertyController : Controller
     public async Task<IActionResult> BookProperty(int propertyId, DateTime checkinDate, DateTime checkoutDate)
     {
         // Retrieve user ID from cookies
-        if (!Request.Cookies.TryGetValue("UserId", out string userIdString) || !int.TryParse(userIdString, out int guestId))
+        if (!Request.Cookies.TryGetValue("userId", out string userIdString) || !int.TryParse(userIdString, out int guestId))
         {
             return Unauthorized("User not logged in.");
         }
