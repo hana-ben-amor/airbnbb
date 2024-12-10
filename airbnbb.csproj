@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <Folder Include="Views\Payment\" />
+    <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
 </Project>

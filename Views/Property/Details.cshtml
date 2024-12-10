@@ -3,7 +3,95 @@
 }
 
 <style>
-   
+    /* Reviews Section Styling */
+    .reviews {
+        text-align: left;
+        margin-top: 30px;
+    }
+
+    .review-list {
+        margin-top: 20px;
+    }
+
+    .review-item {
+        background-color: #fff;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 10px;
+    }
+
+    .review-header {
+        font-weight: bold;
+    }
+
+    .review-rating span {
+        color: #ff5a60;
+        font-size: 18px;
+    }
+
+    .review-item p {
+        color: #555;
+        font-size: 1em;
+    }
+
+    /* Star Rating Styling */
+    .star-rating {
+        font-size: 2em;
+        color: #ddd; /* Gray stars by default */
+        cursor: pointer;
+    }
+
+        .star-rating i {
+            margin-right: 5px;
+        }
+
+            .star-rating i.selected {
+                color: #ff5a60; /* Selected stars in pink */
+            }
+
+    /* Styling for Add Review Form */
+    .form-group {
+        margin-bottom: 20px;
+        font-size: 1.1em;
+    }
+
+        .form-group label {
+            color: #333;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            width: 100%;
+            font-size: 1em;
+        }
+
+            .form-group input:focus,
+            .form-group textarea:focus {
+                border-color: #ff5a60;
+                box-shadow: 0 0 5px rgba(255, 90, 96, 0.6);
+            }
+
+        .form-group textarea {
+            height: 120px; /* Adjust height for comment input */
+        }
+
+    /* Submit Button Styling */
+    .btn-submit {
+        background-color: #ff5a60;
+        border: none;
+        color: white;
+        padding: 12px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        width: 100%;
+        text-align: center;
+    }
+
     .property-details img {
         width: 300px; /* Full width of the container */
         height: 400px; /* Fixed height for the main image */
@@ -333,35 +421,71 @@
             <p>No reviews yet. Be the first to leave one!</p>
         }
 
+        @if (Context.Request.Cookies["Role"] != "Admin")
+        {
+            <!-- Add Review Form -->
+            <h3>Add Your Review</h3>
 
-        <!-- Add Review Form -->
-        <h3>Add Your Review</h3>
-      
-           <form method="post" action="/Review/SubmitReview">
-            <div class="form-group">
-                <input type="hidden" name="propertyId" value="@Model.Id" />
-                <label for="rating">Rating (1-5):</label>
-                <!-- Star Rating -->
-                <div class="star-rating" id="ratingStars">
-                    <i class="bi bi-star" data-value="1"></i>
-                    <i class="bi bi-star" data-value="2"></i>
-                    <i class="bi bi-star" data-value="3"></i>
-                    <i class="bi bi-star" data-value="4"></i>
-                    <i class="bi bi-star" data-value="5"></i>
+            <form method="post" action="/Review/SubmitReview">
+                <div class="form-group">
+                    <input type="hidden" name="propertyId" value="@Model.Id" />
+                    <label for="rating">Rating (1-5):</label>
+                    <!-- Star Rating -->
+                    <div class="star-rating" id="ratingStars">
+                        <i class="bi bi-star" data-value="1"></i>
+                        <i class="bi bi-star" data-value="2"></i>
+                        <i class="bi bi-star" data-value="3"></i>
+                        <i class="bi bi-star" data-value="4"></i>
+                        <i class="bi bi-star" data-value="5"></i>
+                    </div>
+                    <input type="hidden" id="rating" name="rating" value="" required> <!-- Hidden field for rating -->
                 </div>
-                <input type="hidden" id="rating" name="rating" value="" required> <!-- Hidden field for rating -->
-            </div>
 
-            <div class="form-group">
-                <label for="comment">Your Comment:</label>
-                <textarea id="comment" name="comment" required></textarea>
-            </div>
+                <div class="form-group">
+                    <label for="comment">Your Comment:</label>
+                    <textarea id="comment" name="comment" required></textarea>
+                </div>
 
 
-            <button type="submit" class="btn-submit">Submit Review</button>
-        </form>
+                <button type="submit" class="btn-submit">Submit Review</button>
+            </form>
+        }
+            </section>
+
+    <section class="property-images-upload">
+        @if (Context.Request.Cookies["Role"] == "Admin")
+        {
+            <h3>Add Images</h3>
+                <form method="post" action="/Property/UploadImages/" enctype="multipart/form-data">
+                <input type="hidden" name="propertyId" value="@Model.Id" />
+
+                <div class="form-group">
+                    <label for="imageUrls">Image URLs (Optional):</label>
+                    <input type="text" name="imageUrls" class="form-control" placeholder="Enter Image URL (one per line)">
+                </div>
+                <div class="form-group">
+                    <label for="imageUpload">Upload Images (Max 3 Images):</label>
+                    <input type="file" name="imageUpload" class="form-control" accept="image/*" multiple>
+                </div>
+                <button type="submit" class="btn-submit">Upload Images</button>
+            </form>
+        }
     </section>
 
+    <!-- Display Images -->
+    <section class="property-images">
+        <h3>Images</h3>
+        <div class="property-images-gallery">
+            @foreach (var image in @Model.Images)
+            {
+                <div class="property-image">
+                    <img src="@image.Url" alt="@image.Description" />
+                </div>
+            }
+        </div>
+    </section>
+
+        
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const stars = document.querySelectorAll('#ratingStars i');

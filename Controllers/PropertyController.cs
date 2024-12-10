@@ -7,25 +7,105 @@ using Stripe;
 using Stripe.Checkout;
 using Microsoft.Extensions.Options;
 using airbnbb.Services;
+using NuGet.Packaging;
 
 public class PropertyController : Controller
 {
     private readonly IConfiguration _configuration;
     private readonly StripeSettings _stripeSettings;
-
+    private readonly IWebHostEnvironment _hostingEnvironment;
     private readonly AppDbContext _context;
 
-    public PropertyController(AppDbContext context, IConfiguration configuration, IOptions<StripeSettings> stripeSettings)
+    public PropertyController(AppDbContext context, IConfiguration configuration, IWebHostEnvironment hostingEnvironment, IOptions<StripeSettings> stripeSettings)
     {
         _context = context;
         _configuration = configuration;
         _stripeSettings = stripeSettings.Value;
+        _hostingEnvironment = hostingEnvironment;
     }
 
     public async Task<IActionResult> Index()
     {
         var properties = await _context.Properties.ToListAsync(); // Convert DbSet to List
         return View(properties); // Pass the list to the view
+    }
+
+    //[HttpGet]
+    //public IActionResult UploadImages(int propertyId)
+    //{
+    //    var property = _context.Properties.Find(propertyId);
+    //    if (property == null)
+    //    {
+    //        return NotFound(); // Return 404 if property doesn't exist
+    //    }
+
+    //    // Return the view with the property model
+    //    return View(property);
+    //}
+    [HttpGet]
+    public IActionResult UploadImages(int propertyId)
+    {
+        return View();
+    }
+    [HttpPost]
+    public async Task<IActionResult> UploadImages(int propertyId, IFormFile[] imageUpload, string imageUrls)
+    {
+        // Ensure the propertyId is received
+        var property = await _context.Properties
+    .Include(p => p.Images)  // Eagerly load the Images collection
+    .FirstOrDefaultAsync(p => p.Id == propertyId);
+        if (property == null)
+        {
+            return NotFound(); // Handle case where property is not found
+        }
+
+        var imageList = new List<Image>();
+
+        // Handle Image URL input (if any)
+        if (!string.IsNullOrEmpty(imageUrls))
+        {
+            var urls = imageUrls.Split('\n');
+            foreach (var url in urls)
+            {
+                if (Uri.IsWellFormedUriString(url.Trim(), UriKind.Absolute))
+                {
+                    imageList.Add(new Image { Url = url.Trim() });
+                }
+            }
+        }
+
+        // Handle Image File Uploads (Max 3 images)
+        if (imageUpload != null && imageUpload.Length > 0)
+        {
+            foreach (var file in imageUpload)
+            {
+                if (file.ContentType.StartsWith("image/"))
+                {
+                    // Save the file to a folder in wwwroot/uploads
+                    var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "uploads", file.FileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+
+                    // Add image file URL to the list
+                    imageList.Add(new Image { Url = "/uploads/" + file.FileName });
+                }
+            }
+        }
+
+        // Ensure the total number of images doesn't exceed 3
+        if (imageList.Count > 3)
+        {
+            ModelState.AddModelError("", "You can only upload up to 3 images.");
+            return View(); // Return to the view with an error message
+        }
+
+        // Save the images for the property (Assuming property.Images is a navigation property)
+        property.Images.AddRange(imageList);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Details", new { id = propertyId });
     }
 
     [HttpPost]
@@ -53,8 +133,9 @@ public class PropertyController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(Property model, string[] Images)
+    public async Task<IActionResult> Create(Property model, IFormFile[] imageUpload)
     {
+        var imageList = new List<Image>();
         // Initialize a new property object
         var property = new Property
         {
@@ -79,28 +160,57 @@ public class PropertyController : Controller
             _context.Properties.Add(property);
             await _context.SaveChangesAsync();  // This saves the property and generates an Id
 
-            // Now that the property has an Id, we can associate the images
-            if (Images != null && Images.Length > 0)
+            //// Now that the property has an Id, we can associate the images
+            //if (Images != null && Images.Length > 0)
+            //{
+            //    foreach (var imageUrl in Images)
+            //    {
+            //        if (!string.IsNullOrWhiteSpace(imageUrl))
+            //        {
+            //            var image = new Image
+            //            {
+            //                Url = imageUrl,
+            //                PropertyId = property.Id // Set the PropertyId after the property is saved
+            //            };
+            //            _context.Images.Add(image);  // Add the image to the context
+            //        }
+            //    }
+            //}
+            if (imageUpload != null && imageUpload.Length > 0)
             {
-                foreach (var imageUrl in Images)
+                foreach (var file in imageUpload)
                 {
-                    if (!string.IsNullOrWhiteSpace(imageUrl))
+                    if (file.ContentType.StartsWith("image/"))
                     {
-                        var image = new Image
+                        // Save the file to a folder in wwwroot/uploads
+                        var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "uploads", file.FileName);
+                        using (var stream = new FileStream(filePath, FileMode.Create))
                         {
-                            Url = imageUrl,
-                            PropertyId = property.Id // Set the PropertyId after the property is saved
-                        };
-                        _context.Images.Add(image);  // Add the image to the context
+                            await file.CopyToAsync(stream);
+                        }
+
+                        // Add image file URL to the list
+                        imageList.Add(new Image { Url = "/uploads/" + file.FileName });
                     }
                 }
             }
+
+            // Ensure the total number of images doesn't exceed 3
+            if (imageList.Count > 3)
+            {
+                ModelState.AddModelError("", "You can only upload up to 3 images.");
+                return View(); // Return to the view with an error message
+            }
+
+            // Save the images for the property (Assuming property.Images is a navigation property)
+            property.Images.AddRange(imageList);
 
             // Save images to the database
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Property created successfully!";
             return RedirectToAction("Index", "Home");
+
         }
         catch (Exception ex)
         {
